@@ -1,0 +1,50 @@
+#!/usr/bin/env php
+╔══╦═╦═╦╦═╦══╦══╦══╗
+║╔═╣╦╣║║║╦╣══╬║║╣══╣
+║╚╗║╩╣║║║╩╬══╠║║╬══║
+╚══╩═╩╩═╩═╩══╩══╩══╝
+
+<?php
+// @link http://fsymbols.com/generators/carty/
+
+ini_set('display_errors', TRUE);
+error_reporting(E_ALL);
+
+if (PHP_SAPI !== 'cli') {
+	echo "Genesis supports only CLI.";
+	exit(255);
+}
+
+// try find composer autoload
+if (is_file(__DIR__ . '/../../autoload.php')) {
+	require_once __DIR__ . '/../../autoload.php';
+}elseif (is_file(__DIR__ . '/vendor/autoload.php')) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
+// autoloading
+require_once __DIR__ . '/Loader.php';
+$loader = new Genesis\Loader();
+$loader->register();
+
+// parse CLI input into InputArgs
+$arguments = $argv;
+array_shift($arguments); // command
+$options = getopt('w:', [
+	'working-dir:'
+]);
+// pop out named arguments
+foreach ($arguments as $key => $argument) {
+	if (preg_match('#^\-[\S]+=[\S]+#', $argument)) { // arg="value"
+		unset($arguments[$key]);
+	} elseif (preg_match('#^\-[\S]+#', $argument)) { // "arg" SPACE value, so next one also pop put
+		unset($arguments[$key]);
+		unset($arguments[$key + 1]);
+	}
+}
+$inputArgs = new Genesis\InputArgs();
+$inputArgs->setArguments(array_values($arguments));
+$inputArgs->setOptions($options);
+
+// run
+$bootstrap = new Genesis\Bootstrap();
+$bootstrap->run($inputArgs);

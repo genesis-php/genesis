@@ -1,0 +1,9 @@
+{
+  "description": "test",
+  "repository": "test",
+  "readme": "test",
+  "license": "MIT",
+  "dependencies": {
+	"gulp": "^3.9.1"
+  }
+}

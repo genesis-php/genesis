@@ -1,0 +1,9 @@
+{
+  "name": "genesis-php/genesis",
+  "type": "library",
+  "version": "v1.0.0",
+  "require": {
+    "nette/neon": "*"
+  },
+  "minimum-stability": "dev"
+}

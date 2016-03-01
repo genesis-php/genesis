@@ -1,0 +1,5 @@
+/vendor
+/composer.lock
+/tests/03/output
+/tests/report
+/example/output
