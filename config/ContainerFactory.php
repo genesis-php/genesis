@@ -9,13 +9,13 @@ use Nette\Neon\Decoder;
 
 /**
  * @author Adam Bisek <adam.bisek@gmail.com>
- *
- * ContainerFactory
  */
 class ContainerFactory
 {
 
 	private $configs;
+
+	private $containersToMerge;
 
 	private $workingDirectory;
 
@@ -29,6 +29,18 @@ class ContainerFactory
 	public function getConfigs()
 	{
 		return $this->configs;
+	}
+
+
+	public function addContainerToMerge(Container $container)
+	{
+		$this->containersToMerge[] = $container;
+	}
+
+
+	public function getContainersToMerge()
+	{
+		return $this->containersToMerge;
 	}
 
 
@@ -55,6 +67,13 @@ class ContainerFactory
 		$config = [
 			'workingDirectory' => $this->workingDirectory,
 		];
+		if($this->containersToMerge){
+			foreach ($this->containersToMerge as $containerToMerge) {
+				foreach ($containerToMerge as $k => $v) {
+					$config[$k] = $v;
+				}
+			}
+		}
 		$neonDecoder = new Decoder;
 		foreach ($this->configs as $file) {
 			if (!is_file($file)) {
@@ -76,7 +95,7 @@ class ContainerFactory
 			$newKey = $this->parseValue($config, $key);
 			if (is_array($value)) {
 				$value = $this->parseValues($config, $value);
-			} else {
+			} elseif(!is_object($value)) {
 				$value = $this->parseValue($config, $value);
 			}
 			unset($values[$key], $config[$key]);

@@ -28,6 +28,13 @@ class TestBuild extends Genesis\Build
 	}
 
 
+	public function runShowContainerValue()
+	{
+		$key = $this->arguments[1];
+		$this->log(json_encode($this->container->$key));
+	}
+
+
 	public function runError()
 	{
 		$this->error("This is error.");

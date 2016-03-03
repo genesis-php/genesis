@@ -31,15 +31,22 @@ class Bootstrap
 		}
 
 		$bootstrapFile = $this->detectBootstrapFilename($workingDir);
+		$container = NULL;
 		if (is_file($bootstrapFile)) {
 			$this->log("Info: Found bootstrap.php in working directory.", 'dark_gray');
-			require_once $bootstrapFile;
+			$container = require_once $bootstrapFile;
+			if($container === 1 || $container === TRUE){ // 1 = success, TRUE = already required
+				$container = NULL;
+			}elseif(!($container instanceof Container)){
+				$this->log("Returned value from bootstrap.php must be instance of 'Genesis\\Container\\Container' or nothing (NULL).", 'red');
+				exit(255);
+			}
 		} else {
-			$this->log("Info: bootstrap.php was not found in working directory", 'dark_gray');
+			$this->log("Info: bootstrap.php was not found in working directory.", 'dark_gray');
 		}
 
 		$arguments = $inputArgs->getArguments();
-		$container = $this->createContainer($workingDir);
+		$container = $this->createContainer($workingDir, $container);
 		$build = $this->createBuild($container, $arguments);
 		if (count($arguments) < 1) {
 			$this->log("Running default", 'green');
@@ -76,11 +83,14 @@ class Bootstrap
 	/**
 	 * @return Container
 	 */
-	protected function createContainer($workingDir)
+	protected function createContainer($workingDir, Container $bootstrapContainer = NULL)
 	{
 		$factory = new ContainerFactory();
 		$factory->addConfig($workingDir . '/config.neon');
 		$factory->setWorkingDirectory($workingDir);
+		if($bootstrapContainer !== NULL){
+			$factory->addContainerToMerge($bootstrapContainer);
+		}
 		return $factory->create();
 	}
 

@@ -3,8 +3,8 @@
 namespace Genesis\Tests;
 
 
+use Genesis\Config\Container;
 use Genesis\Config\ContainerFactory;
-use Nette\Neon\Neon;
 
 /**
  * @author Adam Bisek <adam.bisek@gmail.com>
@@ -20,6 +20,22 @@ class ContainerTest extends BaseTest
 		$this->assertEquals($workingDir, $factory->getWorkingDirectory());
 		$factory->addConfig('config1.neon');
 		$this->assertEquals(['config1.neon'], $factory->getConfigs());
+		$this->assertEquals(NULL, $factory->getContainersToMerge());
+		$factory->addContainerToMerge(new Container());
+		$this->assertCount(1, $factory->getContainersToMerge());
+		$this->assertTrue($factory->getContainersToMerge()[0] instanceof Container);
+	}
+
+
+	public function testIterator()
+	{
+		$container = new Container();
+		$container->k1 = 'v1';
+		$this->assertCount(1, $container->getIterator());
+		foreach($container as $k => $v){
+			$this->assertEquals('k1', $k);
+			$this->assertEquals('v1', $v);
+		}
 	}
 
 
@@ -69,11 +85,15 @@ class ContainerTest extends BaseTest
 		$factory->setWorkingDirectory($workingDir);
 		$factory->addConfig(__DIR__ . '/02/config.neon');
 		$factory->addConfig(__DIR__ . '/02/config2.neon');
+		$factory->addContainerToMerge(new Container([
+			'myContainerKey' => 'myContainerValue',
+		]));
 		$container = $factory->create();
 
 		$this->assertEquals($workingDir, $container->workingDirectory);
 		$this->assertEquals('MyTest\NonExistingClass2', $container->class);
 		$this->assertEquals([], $container->myArray);
+		$this->assertEquals('myContainerValue', $container->myContainerKey);
 	}
 
 }

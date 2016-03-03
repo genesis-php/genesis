@@ -8,16 +8,14 @@ namespace Genesis\Config;
  * @author Adam Bisek <adam.bisek@gmail.com>
  *
  * @property $workingDirectory
- *
- * Config
  */
-class Container
+class Container implements \IteratorAggregate
 {
 
 	private $config;
 
 
-	public function __construct(array $config)
+	public function __construct(array $config = NULL)
 	{
 		$this->config = $config;
 	}
@@ -35,6 +33,12 @@ class Container
 	public function __set($name, $value)
 	{
 		$this->config[$name] = $value;
+	}
+
+
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->config);
 	}
 
 }

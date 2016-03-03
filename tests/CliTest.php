@@ -20,6 +20,26 @@ class CliTest extends BaseTest
 	}
 
 
+	public function testWrongBootstrapReturn()
+	{
+		$result = $this->execute('task', [
+			'working-dir' => 'tests/04',
+		]);
+		$this->assertEquals(255, $result['code']);
+		$line = $result['output'][6];
+		$this->assertContains("Returned value from bootstrap.php must be instance of 'Genesis\\Container\\Container' or nothing (NULL)", $line);
+	}
+
+
+	public function testShowBootstrapContainerValue() // test, if returned Container from bootstrap is merged into Container
+	{
+		$result = $this->execute('showContainerValue myTestBootstrapKey');
+		$this->assertEquals(0, $result['code']);
+		$line = $result['output'][7];
+		$this->assertContains('"val"', $line);
+	}
+
+
 	public function testExistingTask()
 	{
 		$result = $this->execute('info');
