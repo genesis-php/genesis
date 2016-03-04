@@ -21,10 +21,13 @@ class Directory extends Command
 			if (in_array($file->getBasename(), array('.', '..'))) {
 				continue;
 			}
-			if ($file->isDir()) {
+			if ($file->isLink()) {
+				$this->checkPath($file->getPathName(), $directory);
+				unlink($file->getPathname());
+			} elseif ($file->isDir()) {
 				$this->checkPath($file->getPathName(), $directory);
 				rmdir($file->getPathName());
-			} elseif ($file->isFile() || $file->isLink()) {
+			} elseif ($file->isFile()) {
 				$this->checkPath($file->getPathName(), $directory);
 				unlink($file->getPathname());
 			}
