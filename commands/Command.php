@@ -3,11 +3,24 @@
 namespace Genesis\Commands;
 
 
+use Genesis\Cli;
+
+
 /**
  * @author Adam Bisek <adam.bisek@gmail.com>
  */
 abstract class Command
 {
+
+	const SUCCESS = 'success';
+
+	const ERROR = 'error';
+
+	private static $severityColors = [
+		self::SUCCESS => 'green',
+		self::ERROR => 'red',
+	];
+
 
 	protected function error($message)
 	{
@@ -15,9 +28,10 @@ abstract class Command
 	}
 
 
-	protected function log($message)
+	protected function log($message, $severity = NULL)
 	{
-		echo $message . PHP_EOL;
+		$color = isset(self::$severityColors[$severity]) ? self::$severityColors[$severity] : NULL;
+		echo Cli::getColoredString($message . PHP_EOL, $color);
 	}
 
 }

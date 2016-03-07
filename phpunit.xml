@@ -19,6 +19,7 @@
             <directory>./config</directory>
             <exclude>
                 <directory>tests/</directory>
+                <directory>build-dist/</directory>
                 <directory>example/</directory>
                 <directory>vendor/</directory>
                 <file>commands/Command.php</file>

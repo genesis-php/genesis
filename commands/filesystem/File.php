@@ -43,4 +43,13 @@ class File extends Command
 		}
 	}
 
+
+	public function makeExecutable($file)
+	{
+		exec('chmod +x ' . escapeshellarg($file), $output, $result); // native PHP chmod cannot work
+		if ($result !== 0) {
+			$this->error("Cannot make executable file '$file'.");
+		}
+	}
+
 }

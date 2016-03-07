@@ -30,6 +30,15 @@ class Bootstrap
 			exit(255);
 		}
 
+		$arguments = $inputArgs->getArguments();
+		if(isset($arguments[0]) && $arguments[0] === 'self-init'){
+			$directoryName = isset($arguments[1]) ? $arguments[1] : 'build';
+			$selfInit = new Commands\SelfInit();
+			$selfInit->setDistDirectory(__DIR__ . '/build-dist');
+			$selfInit->execute($workingDir, $directoryName);
+			exit(0);
+		}
+
 		$bootstrapFile = $this->detectBootstrapFilename($workingDir);
 		$container = NULL;
 		if (is_file($bootstrapFile)) {
@@ -54,7 +63,7 @@ class Bootstrap
 			exit(0);
 		}
 
-		$method = 'run' . ucfirst($arguments[0]);
+		$method = 'run' . str_replace('-', '', ucfirst($arguments[0]));
 		if (!method_exists($build, $method)) {
 			$this->log("Task '$arguments[0]' does not exists.", 'red');
 			exit(255);

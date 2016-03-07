@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CURRENT_FILE="$CURRENT_DIR/build"
+
+COMPOSER_PATH="${CURRENT_DIR}/../vendor"
+EXECUTABLE=${COMPOSER_PATH}/genesis-php/genesis/genesis
+
+if [ ! -f ${EXECUTABLE} ]; then
+    echo "Genesis library not found. Do you have installed dependencies via?: composer install\n"
+    echo "Or fix path to vendor dir - variable 'COMPOSER_PATH'. in $CURRENT_FILE\n"
+    echo "Now expecting path to vendor dir '$COMPOSER_PATH'"
+    exit
+fi
+
+${EXECUTABLE} --working-dir ${CURRENT_DIR} "$@"

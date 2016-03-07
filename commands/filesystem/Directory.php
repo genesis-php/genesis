@@ -11,16 +11,19 @@ use Genesis\Commands\Command;
 class Directory extends Command
 {
 
+	public function read($directory)
+	{
+		$files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+		return $files;
+	}
+
+
 	public function clean($directory)
 	{
 		if (!is_dir($directory)) {
 			$this->error("'$directory' is not an directory.");
 		}
-		$files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory), \RecursiveIteratorIterator::CHILD_FIRST);
-		foreach ($files as $file) {
-			if (in_array($file->getBasename(), array('.', '..'))) {
-				continue;
-			}
+		foreach ($this->read($directory) as $file) {
 			if ($file->isLink()) {
 				$this->checkPath($file->getPathName(), $directory);
 				unlink($file->getPathname());
@@ -35,7 +38,7 @@ class Directory extends Command
 	}
 
 
-	public function create($dir, $chmod = NULL)
+	public function create($dir, $chmod = '0777')
 	{
 		if (is_dir($dir)) {
 			$this->error("Dir '$dir' already exists.");

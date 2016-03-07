@@ -84,6 +84,22 @@ class CommandsTest extends BaseTest
 	}
 
 
+	public function testSelfInit()
+	{
+		$dir = __DIR__ . '/03/output';
+		$command = new Commands\Filesystem\Directory();
+		$command->clean($dir);
+
+		$selfInit = new Commands\SelfInit();
+		$selfInit->setDistDirectory(__DIR__ . '/../build-dist');
+		ob_start();
+		$selfInit->execute($dir, 'build');
+		ob_end_clean();
+		$res = glob($dir . "/build/*");
+		$this->assertCount(4, $res);
+	}
+
+
 	/** Filesystem */
 
 	public function testFs()
@@ -97,6 +113,10 @@ class CommandsTest extends BaseTest
 		$command = new Commands\Filesystem\Directory();
 		$command->create($dir . '/test-dir', 777);
 		$this->assertFileExists($dir . '/test-dir');
+
+		$iterator = $command->read($dir);
+		$this->assertCount(1, $iterator);
+		$this->assertEquals('test-dir', $iterator->current()->getFileName());
 
 		$command = new Commands\Filesystem\File();
 		$command->create($dir . '/testfile.json', '{}');

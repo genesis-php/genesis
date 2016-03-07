@@ -3,6 +3,9 @@
 namespace Genesis\Tests;
 
 
+use Genesis;
+
+
 /**
  * @author Adam Bisek <adam.bisek@gmail.com>
  */
@@ -67,6 +70,26 @@ class CliTest extends BaseTest
 		$this->assertEquals(0, $result['code']);
 		$line = $result['output'][6];
 		$this->assertContains('Running default', $line);
+	}
+
+
+	public function testSelfInitTask()
+	{
+		$dir = __DIR__ . '/self-init';
+		$command = new Genesis\Commands\Filesystem\Directory();
+		$command->create($dir);
+
+		$result = $this->execute('self-init', [
+			'working-dir' => 'tests/self-init',
+		]);
+		$this->assertEquals(0, $result['code']);
+		$line = $result['output'][5];
+		$this->assertContains("Build initialized in", $line);
+		$line = $result['output'][6];
+		$this->assertContains("You can start by typing", $line);
+
+		$command->clean($dir);
+		rmdir($dir);
 	}
 
 

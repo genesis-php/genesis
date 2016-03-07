@@ -21,23 +21,30 @@ Don't worry, it will take only minute.
 
 Getting started
 ---------------
-Create directory with build in your project, for example 'build'.
+Initialize build directory in your project:
+(path to your vendor directory may differ!)<br>
+<code>
+../vendor/genesis-php/genesis/genesis <b>self-init</b>
+</code>
 
-In build directory create:
+
+An 'build' directory will be created, with these files:
 - <b>Build.php</b>
 	- PHP class with run<b>Xyz</b>() methods
 		- every public method starting with 'run' is an "Task"
 		- in task you can run any code you want
-	- [for example](https://github.com/genesis-php/example/blob/master/build-simple/TestBuild.php)
+	- [for example](https://github.com/genesis-php/genesis/blob/master/build-dist/Build.php)
 - <b>config.neon</b>
 	- config in [NEON](http://ne-on.org) format (very similar to YAML)
 	- define build class and some variables, you need
-	[for example](https://github.com/genesis-php/example/blob/master/build-simple/config.neon)
-- <b>bootstrap.php</b>
+	[for example](https://github.com/genesis-php/genesis/blob/master/build-dist/config.neon)
+- <b>bootstrap.php</b> (optional)
 	- to load Build.php class
-	- [for example](https://github.com/genesis-php/example/blob/master/build-simple/bootstrap.php)
+	- [for example](https://github.com/genesis-php/genesis/blob/master/build-dist/bootstrap.php)
+- <b>build</b> (optional)
+	- shell script which is only shortcut into vendor directory with genesis
 
-[Look at the example, how can build directory looks like.](https://github.com/genesis-php/example/tree/master/build-simple)
+[Look at the skeleton, how can build directory looks like.](https://github.com/genesis-php/genesis/tree/master/build-dist)
 
 
 Run it by (path to your vendor directory may differ!):<br>
@@ -45,7 +52,11 @@ Run it by (path to your vendor directory may differ!):<br>
 ../vendor/genesis-php/genesis/genesis <b>mytask</b>
 </code>
 
-To run it simplier, you can make an [shortcut](https://github.com/genesis-php/example/blob/master/build/build).
+OR via shortcut (you may need to edit path to vendor dir in file 'build/build'):<br>
+<code>
+build/build <b>mytask</b>
+</code>
+
 
 
 CLI
