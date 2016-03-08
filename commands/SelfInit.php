@@ -6,8 +6,7 @@ namespace Genesis\Commands;
 
 /**
  * @author Adam Bisek <adam.bisek@gmail.com>
- *
- * SelfInit
+ * @internal You should NOT use
  */
 class SelfInit extends Command
 {

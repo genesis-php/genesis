@@ -83,6 +83,49 @@ Commands
 Commands are intended to use them in Tasks.
 In namespace Genesis\Commands are default commands and of course you can create and use your own commands.
 
+<h3>Common</h3>
+- [Exec](https://github.com/genesis-php/genesis/blob/master/commands/Exec.php)
+	- executes shell command
+	- returns an [ExecResult](https://github.com/genesis-php/genesis/blob/master/commands/ExecResult.php) including return code and output
+- [Git](https://github.com/genesis-php/genesis/blob/master/commands/Git.php)
+	- executes Git command & can clone any repository
+	- returns an [ExecResult](https://github.com/genesis-php/genesis/blob/master/commands/ExecResult.php) including return code and output
+- [Help](https://github.com/genesis-php/genesis/blob/master/commands/Help.php)
+	- prints list of available tasks to output
+	- list is given in simple array
+- [NodeJs](https://github.com/genesis-php/genesis/blob/master/commands/NodeJs.php)
+	- can install packages (npm install) in any directory
+- [PhpUnit](https://github.com/genesis-php/genesis/blob/master/commands/PhpUnit.php)
+	- can run PHPUnit tests in any directory & provides some setup
+
+<h3>Assets</h3>
+- [Assets\Gulp](https://github.com/genesis-php/genesis/blob/master/commands/assets/Gulp.php)
+	- Running gulp, usually to build frontend
+	- You can setup gulpfile location
+- [Assets\Less](https://github.com/genesis-php/genesis/blob/master/commands/assets/Less.php)
+	- if you want only compile LESS files on build, you can use this command
+	- using NodeJs lessc tool
+
+<h3>Filesystem</h3>
+- [Filesystem\Directory](https://github.com/genesis-php/genesis/blob/master/commands/filesystem/Directory.php)
+	- provides set of methods for manipulating with directories
+	- creating, cleaning (purging), reading
+- [Filesystem\File](https://github.com/genesis-php/genesis/blob/master/commands/filesystem/File.php)
+	- provides set of methods for manipulating with files
+	- creating, copying
+- [Filesystem\Symlink](https://github.com/genesis-php/genesis/blob/master/commands/filesystem/Symlink.php)
+	- creating symlinks
+
+<h3>Test</h3>
+This set of commands may be useful, if you want to check system some system requirements,
+usually at the beginning of the build.
+- [Test\NodeJs](https://github.com/genesis-php/genesis/blob/master/commands/test/NodeJs.php)
+	- tests NodeJs version
+- [Test\Php](https://github.com/genesis-php/genesis/blob/master/commands/test/Php.php)
+	- tests PHP ini settings
+	- tests if desired extension present
+- [Test\NodeJs](https://github.com/genesis-php/genesis/blob/master/commands/test/Programs.php)
+	- tests if desired programs is installed (on UNIX)
 
 
 Integration

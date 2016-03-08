@@ -7,7 +7,7 @@ namespace Genesis\Commands;
 /**
  * @author Adam Bisek <adam.bisek@gmail.com>
  */
-class PHPUnit extends Command
+class PhpUnit extends Command
 {
 
 	public function execute($workingDir, $target, array $options)
