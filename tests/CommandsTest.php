@@ -134,6 +134,12 @@ class CommandsTest extends BaseTest
 		$this->assertFileExists($dir . '/sym-testfile.json');
 		$this->assertTrue(is_link($dir . '/sym-testfile.json'));
 
+		ob_start();
+		$command->createRelative($dir, 'testfile.json', 'sym-rel-testfile.json');
+		ob_end_clean();
+		$this->assertFileExists($dir . '/sym-rel-testfile.json');
+		$this->assertTrue(is_link($dir . '/sym-rel-testfile.json'));
+
 		$command = new Commands\Filesystem\Directory();
 		$command->clean($dir);
 		$res = glob($dir . "/*");
