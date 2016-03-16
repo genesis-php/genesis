@@ -1,5 +1,8 @@
 [Genesis](https://github.com/genesis-php/genesis)
 ===================================
+[![Latest Stable Version](https://poser.pugx.org/genesis-php/genesis/v/stable)](https://github.com/genesis-php/genesis/releases)
+[![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/genesis-php/genesis/blob/master/license.md)
+
 Genesis is lightweight, smart and easy to use CLI tool, for building (mainly) PHP applications.
 Usage is similar to Phing, but Genesis is much easier.
 For configuration is used an .neon file, which is very similar to YAML.
