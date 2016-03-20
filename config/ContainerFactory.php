@@ -84,29 +84,37 @@ class ContainerFactory
 			}
 			$config = array_merge($config, $neonDecoder->decode(file_get_contents($file)));
 		}
-		$this->parseValues($config, $config);
+		$config = $this->parseValues($config);
 		return new Container($config);
 	}
 
 
-	private function parseValues(& $config, array $values)
+	private function parseValues($config, & $allConfig = [], $keysPath = [])
 	{
-		foreach ($values as $key => $value) {
-			$newKey = $this->parseValue($config, $key);
+		foreach ($config as $key => $value) {
 			if (is_array($value)) {
-				$value = $this->parseValues($config, $value);
+				$value = $this->parseValues($value, $allConfig, array_merge($keysPath, [$key]));
 			} elseif(!is_object($value)) {
-				$value = $this->parseValue($config, $value);
+				$value = $this->parseValue($value, $allConfig);
 			}
-			unset($values[$key], $config[$key]);
-			$values[$newKey] = $value;
+
+			// get new key name, and replace it
+			$newKey = $this->parseValue($key, $allConfig);
+			unset($config[$key]);
 			$config[$newKey] = $value;
+
+			// write to global config
+			$v =& $allConfig;
+			foreach ($keysPath as $kp) {
+				$v =& $v[$kp];
+			}
+			$v[$newKey] = $value;
 		}
-		return $values;
+		return $config;
 	}
 
 
-	private function parseValue($config, $value)
+	private function parseValue($value, $config)
 	{
 		if (preg_match_all('#%([^%]+)%#', $value, $matches)) {
 			foreach ($matches[1] as $match) {

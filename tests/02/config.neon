@@ -1,1 +1,7 @@
 class: MyTest\NonExistingClass
+config:
+	someVar: someValue
+	anotherVar:
+something:
+	somethingNested:
+	config: 'i am buggy?'

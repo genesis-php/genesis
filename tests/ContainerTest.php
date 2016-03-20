@@ -94,6 +94,8 @@ class ContainerTest extends BaseTest
 		$this->assertEquals('MyTest\NonExistingClass2', $container->class);
 		$this->assertEquals([], $container->myArray);
 		$this->assertEquals('myContainerValue', $container->myContainerKey);
+		$this->assertEquals('someValue', $container->config['someVar']);
+		$this->assertEquals('i am buggy?', $container->something['config']);
 	}
 
 }
