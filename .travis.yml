@@ -1,0 +1,19 @@
+language: php
+php:
+  - 7.0
+  - 5.6
+  - 5.5
+  - 5.4
+
+install:
+  - npm install -g less
+  - composer self-update
+  - composer install
+
+before_script: composer require genesis-php/genesis ~1.2
+
+script: vendor/bin/phpunit
+
+#after_script:
+#  - composer require scrutinizer/ocular "~1.0"
+#  - vendor/bin/ocular code-coverage:upload --repository=g/genesis-php/task --format=php-clover coverage.xml

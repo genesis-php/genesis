@@ -14,6 +14,16 @@ use Genesis\Commands;
 class CommandsTest extends BaseTest
 {
 
+	public function setUp()
+	{
+		parent::setUp();
+		$dir = __DIR__ . '/03/output';
+		if(!is_dir($dir)){
+			mkdir($dir);
+		}
+	}
+
+
 	/** Common */
 
 	public function testExec()
