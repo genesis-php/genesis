@@ -235,7 +235,7 @@ class CommandsTest extends BaseTest
 			'settings' => [
 				'register_globals' => FALSE,
 			], 'extensions' => [
-				'mysql',
+				'PDO',
 			],
 		]);
 		$this->assertNotContains('Error', ob_get_clean());
