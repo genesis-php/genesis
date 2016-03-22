@@ -96,6 +96,9 @@ class Bootstrap
 	{
 		$factory = new ContainerFactory();
 		$factory->addConfig($workingDir . '/config.neon');
+		if(is_file($workingDir . '/config.local.neon')){
+			$factory->addConfig($workingDir . '/config.local.neon');
+		}
 		$factory->setWorkingDirectory($workingDir);
 		if($bootstrapContainer !== NULL){
 			$factory->addContainerToMerge($bootstrapContainer);

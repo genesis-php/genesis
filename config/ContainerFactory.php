@@ -82,7 +82,10 @@ class ContainerFactory
 			if (!is_readable($file)) {
 				throw new \RuntimeException("Config file '$file' not readable.");
 			}
-			$config = array_merge($config, $neonDecoder->decode(file_get_contents($file)));
+			$array = $neonDecoder->decode(file_get_contents($file));
+			if($array !== NULL){
+				$config = array_replace_recursive($config, $array);
+			}
 		}
 		$config = $this->parseValues($config);
 		return new Container($config);
