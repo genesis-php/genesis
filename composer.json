@@ -1,7 +1,7 @@
 {
   "name": "genesis-php/genesis",
   "type": "library",
-  "version": "v1.2.4",
+  "version": "v1.2.5",
   "license": "MIT",
   "require": {
     "nette/neon": "*"
