@@ -18,6 +18,9 @@ class Bootstrap
 	public function run(InputArgs $inputArgs)
 	{
 		$workingDir = getcwd();
+		if ($inputArgs->getOption('no-colors')) {
+			Cli::$enableColors = FALSE;
+		}
 		if ($inputArgs->getOption('working-dir')) {
 			$workingDir = realpath($inputArgs->getOption('working-dir'));
 			if (!$workingDir) {

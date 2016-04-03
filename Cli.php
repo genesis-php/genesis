@@ -12,6 +12,8 @@ namespace Genesis;
 class Cli
 {
 
+	public static $enableColors = TRUE;
+
 	private static $foregroundColors = array(
 		'black' => '0;30', 'dark_gray' => '1;30', 'blue' => '0;34', 'light_blue' => '1;34', 'green' => '0;32', 'light_green' => '1;32', 'cyan' => '0;36', 'light_cyan' => '1;36', 'red' => '0;31', 'light_red' => '1;31', 'purple' => '0;35', 'light_purple' => '1;35', 'brown' => '0;33', 'yellow' => '1;33', 'light_gray' => '0;37', 'white' => '1;37',
 	);
@@ -23,6 +25,10 @@ class Cli
 
 	public static function getColoredString($string, $foreground = NULL, $background = NULL)
 	{
+		if(!self::$enableColors){
+			return $string;
+		}
+
 		$colored = "";
 		if (isset(self::$foregroundColors[$foreground])) {
 			$colored .= "\033[" . self::$foregroundColors[$foreground] . "m";

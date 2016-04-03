@@ -29,8 +29,9 @@ $loader->register();
 // parse CLI input into InputArgs
 $arguments = $argv;
 array_shift($arguments); // command
-$options = getopt('w:', [
-	'working-dir:'
+$options = getopt('w:c:', [
+	'working-dir:',
+	'colors:',
 ]);
 // pop out named arguments
 foreach ($arguments as $key => $argument) {
