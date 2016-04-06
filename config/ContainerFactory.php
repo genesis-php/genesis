@@ -121,7 +121,7 @@ class ContainerFactory
 	{
 		if (preg_match_all('#%([^%]+)%#', $value, $matches)) {
 			foreach ($matches[1] as $match) {
-				if (!isset($config[$match])) {
+				if (!array_key_exists($match, $config)) {
 					throw new \RuntimeException("Cannot find variable '$match'.");
 				}
 				$value = str_replace("%$match%", $config[$match], $value); // TODO: nested variables
