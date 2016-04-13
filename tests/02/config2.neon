@@ -1,2 +1,10 @@
 class: MyTest\NonExistingClass2
 myArray: []
+mergeMe:
+	key2: val
+doNotMergeMe!:
+	key2: val
+doNotMergeMeRecursive:
+	doNotMergeField!:
+		anotherKey2:
+			anotherVal

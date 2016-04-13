@@ -94,6 +94,7 @@ class ContainerFactory
 
 	private function parseValues($config, & $allConfig = [], $keysPath = [])
 	{
+		$config = $this->resolveUnmergables($config);
 		foreach ($config as $key => $value) {
 			if (is_array($value)) {
 				$value = $this->parseValues($value, $allConfig, array_merge($keysPath, [$key]));
@@ -128,6 +129,19 @@ class ContainerFactory
 			}
 		}
 		return $value;
+	}
+
+
+	private function resolveUnmergables($config)
+	{
+		foreach ($config as $key => $value) {
+			if(preg_match('#!$#', $key)){
+				$newKey = substr($key, 0, strlen($key) - 1);
+				$config[$newKey] = $value;
+				unset($config[$key]);
+			}
+		}
+		return $config;
 	}
 
 }

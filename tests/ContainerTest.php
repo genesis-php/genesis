@@ -96,6 +96,16 @@ class ContainerTest extends BaseTest
 		$this->assertEquals('myContainerValue', $container->myContainerKey);
 		$this->assertEquals('someValue', $container->config['someVar']);
 		$this->assertEquals('i am buggy?', $container->something['config']);
+		$this->assertCount(2, $container->mergeMe);
+		$this->assertCount(1, $container->doNotMergeMe);
+		$this->assertCount(1, $container->doNotMergeMeRecursive);
+		$this->assertCount(1, $container->doNotMergeMeRecursive['doNotMergeField']);
+		$array = [
+			'doNotMergeField' => [
+				'anotherKey2' => 'anotherVal',
+			],
+		];
+		$this->assertTrue($array === $container->doNotMergeMeRecursive, 'Array doNotMergeMeRecursive is not the same: ' . print_r($container->doNotMergeMeRecursive, TRUE));
 	}
 
 }
