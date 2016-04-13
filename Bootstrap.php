@@ -129,6 +129,7 @@ class Bootstrap
 		if (!($build instanceof IBuild)) {
 			throw new \RuntimeException("Instance of build does not implements interface IBuild.");
 		}
+		$build->setup();
 		return $build;
 	}
 

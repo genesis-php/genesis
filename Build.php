@@ -25,6 +25,11 @@ class Build implements IBuild
 	}
 
 
+	public function setup()
+	{
+	}
+
+
 	public function runDefault()
 	{
 		$tasks = $this->detectAvailableTasks();

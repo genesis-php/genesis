@@ -9,6 +9,10 @@ namespace Genesis;
 interface IBuild
 {
 
+	public function __construct(Config\Container $container, array $arguments = NULL);
+
+	public function setup();
+
 	public function runDefault();
 
 }
