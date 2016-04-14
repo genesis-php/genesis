@@ -10,7 +10,8 @@ install:
   - composer self-update
   - composer install
 
-before_script: composer require genesis-php/genesis ~1.2
+before_script:
+  - "ls -la"
 
 script: vendor/bin/phpunit
 
