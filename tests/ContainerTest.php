@@ -106,6 +106,7 @@ class ContainerTest extends BaseTest
 			],
 		];
 		$this->assertTrue($array === $container->doNotMergeMeRecursive, 'Array doNotMergeMeRecursive is not the same: ' . print_r($container->doNotMergeMeRecursive, TRUE));
+		$this->assertEquals('includedVal', $container->includedKey);
 	}
 
 }

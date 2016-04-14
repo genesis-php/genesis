@@ -74,8 +74,23 @@ class ContainerFactory
 				}
 			}
 		}
+		$result = $this->readFiles($this->configs, $config);
+		$config = $result['config'];
+		if($result['includes'] !== NULL){
+			$result = $this->readFiles($result['includes'], $config);
+			$config = $result['config'];
+		}
+
+		$config = $this->parseValues($config);
+		return new Container($config);
+	}
+
+
+	private function readFiles(array $files, $config)
+	{
+		$includes = NULL;
 		$neonDecoder = new Decoder;
-		foreach ($this->configs as $file) {
+		foreach ($files as $file) {
 			if (!is_file($file)) {
 				throw new \RuntimeException("Config file '$file' not found.");
 			}
@@ -85,10 +100,17 @@ class ContainerFactory
 			$array = $neonDecoder->decode(file_get_contents($file));
 			if($array !== NULL){
 				$config = array_replace_recursive($config, $array);
+				if(isset($array['includes'])){
+					foreach($array['includes'] as $include){
+						$includes[] = dirname($file) . DIRECTORY_SEPARATOR . $include;
+					}
+				}
 			}
 		}
-		$config = $this->parseValues($config);
-		return new Container($config);
+		return [
+			'config' => $config,
+			'includes' => $includes,
+		];
 	}
 
 
