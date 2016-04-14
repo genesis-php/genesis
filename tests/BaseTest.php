@@ -29,6 +29,9 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
 		if (isset($options['working-dir'])) {
 			$opts['--working-dir'] = $options['working-dir'];
 		}
+		if (isset($options['config'])) {
+			$opts['--config'] = $options['config'];
+		}
 
 		$cmd = $this->executable . ' ';
 		foreach ($opts as $k => $v) {

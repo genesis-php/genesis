@@ -15,6 +15,9 @@ use Genesis\Config\ContainerFactory;
 class Bootstrap
 {
 
+	const DEFAULT_CONFIG_FILE = 'config.neon';
+
+
 	public function run(InputArgs $inputArgs)
 	{
 		$workingDir = getcwd();
@@ -58,7 +61,8 @@ class Bootstrap
 		}
 
 		$arguments = $inputArgs->getArguments();
-		$container = $this->createContainer($workingDir, $container);
+		$configFile = $inputArgs->getOption('config') ? $inputArgs->getOption('config') : self::DEFAULT_CONFIG_FILE;
+		$container = $this->createContainer($workingDir, $configFile, $container);
 		$build = $this->createBuild($container, $arguments);
 		if (count($arguments) < 1) {
 			$this->log("Running default", 'green');
@@ -95,10 +99,10 @@ class Bootstrap
 	/**
 	 * @return Container
 	 */
-	protected function createContainer($workingDir, Container $bootstrapContainer = NULL)
+	protected function createContainer($workingDir, $configFile, Container $bootstrapContainer = NULL)
 	{
 		$factory = new ContainerFactory();
-		$factory->addConfig($workingDir . '/config.neon');
+		$factory->addConfig($workingDir . '/' . $configFile);
 		if(is_file($workingDir . '/config.local.neon')){
 			$factory->addConfig($workingDir . '/config.local.neon');
 		}

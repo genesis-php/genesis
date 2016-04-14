@@ -140,4 +140,16 @@ class CliTest extends BaseTest
 		$this->assertContains('Running [info]', $line);
 	}
 
+
+	public function testOptionalConfigBuild()
+	{
+		$result = $this->execute('showContainerValue optionalConfigKey', [
+			'working-dir' => 'tests/01',
+			'config' => 'optionalConfig.neon',
+		]);
+		$this->assertEquals(0, $result['code']);
+		$line = $result['output'][7];
+		$this->assertContains('"optionalConfigVal"', $line);
+	}
+
 }

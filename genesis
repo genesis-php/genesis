@@ -32,6 +32,7 @@ array_shift($arguments); // command
 $options = getopt('w:c:', [
 	'working-dir:',
 	'colors:',
+	'config:'
 ]);
 // pop out named arguments
 foreach ($arguments as $key => $argument) {
