@@ -74,43 +74,54 @@ class ContainerFactory
 				}
 			}
 		}
-		$result = $this->readFiles($this->configs, $config);
-		$config = $result['config'];
-		if($result['includes'] !== NULL){
-			$result = $this->readFiles($result['includes'], $config);
-			$config = $result['config'];
-		}
+		$configs = $this->resolveFiles($this->configs);
+		$config = $this->readConfigs($configs, $config);
 
 		$config = $this->parseValues($config);
 		return new Container($config);
 	}
 
 
-	private function readFiles(array $files, $config)
+	private function resolveFiles(array $files)
 	{
-		$includes = NULL;
-		$neonDecoder = new Decoder;
+		$return = [];
 		foreach ($files as $file) {
-			if (!is_file($file)) {
-				throw new \RuntimeException("Config file '$file' not found.");
-			}
-			if (!is_readable($file)) {
-				throw new \RuntimeException("Config file '$file' not readable.");
-			}
-			$array = $neonDecoder->decode(file_get_contents($file));
+			$array = $this->readFile($file);
 			if($array !== NULL){
-				$config = array_replace_recursive($config, $array);
 				if(isset($array['includes'])){
 					foreach($array['includes'] as $include){
-						$includes[] = dirname($file) . DIRECTORY_SEPARATOR . $include;
+						$return[] = dirname($file) . DIRECTORY_SEPARATOR . $include;
 					}
 				}
+				$return[] = $file;
 			}
 		}
-		return [
-			'config' => $config,
-			'includes' => $includes,
-		];
+		return $return;
+	}
+
+
+	private function readConfigs($files, $config)
+	{
+		foreach ($files as $file) {
+			$array = $this->readFile($file);
+			if($array !== NULL) {
+				$config = array_replace_recursive($config, $array);
+			}
+		}
+		return $config;
+	}
+
+
+	private function readFile($file)
+	{
+		$neonDecoder = new Decoder;
+		if (!is_file($file)) {
+			throw new \RuntimeException("Config file '$file' not found.");
+		}
+		if (!is_readable($file)) {
+			throw new \RuntimeException("Config file '$file' not readable.");
+		}
+		return $neonDecoder->decode(file_get_contents($file));
 	}
 
 
