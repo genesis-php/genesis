@@ -37,13 +37,19 @@ An 'build' directory will be created, with these files:
 	- PHP class with run<b>Xyz</b>() methods
 		- every public method starting with 'run' is an "Task"
 		- in task you can run any code you want
+		- there is public method 'setup', it runs slightly after Build class is constructed
 	- [for example](https://github.com/genesis-php/genesis/blob/master/build-dist/Build.php)
 - <b>config.neon</b>
 	- config in [NEON](http://ne-on.org) format (very similar to YAML)
 	- define build class and some variables, you need
-	[for example](https://github.com/genesis-php/genesis/blob/master/build-dist/config.neon)
+	- if you don't want to merge any config variable, add ! (exclamation mark), eg:<br>
+	<code>myParam!: unoverrided value</code>
+	- you can include another configs directly in NEON file:<br>
+		<code>includes:</code><br>
+		<code>  - include.neon</code>
+	- [for example](https://github.com/genesis-php/genesis/blob/master/build-dist/config.neon)
 - <b>bootstrap.php</b> (optional)
-	- to load Build.php class
+	- to load Build class and other classes
 	- [for example](https://github.com/genesis-php/genesis/blob/master/build-dist/bootstrap.php)
 - <b>build</b> (optional)
 	- shell script which is only shortcut into vendor directory with genesis
@@ -51,26 +57,27 @@ An 'build' directory will be created, with these files:
 [Look at the skeleton, how can build directory looks like.](https://github.com/genesis-php/genesis/tree/master/build-dist)
 
 
+
+CLI
+---------------
+This tool is intended to use via CLI only.
+
 Run it by (path to your vendor directory may differ!):<br>
 <code>
 ../vendor/genesis-php/genesis/genesis <b>mytask</b>
 </code>
 
-OR via shortcut (you may need to edit path to vendor dir in file 'build/build'):<br>
+OR via shortcut, which creates self-init (you may need to edit path to vendor dir in file 'build/build'):<br>
 <code>
-build/build <b>mytask</b>
+./build/build <b>mytask</b>
 </code>
 
-
-
-CLI
----------------
 You can use any working directory with parameter "--working-dir":
 
-<code>
-../vendor/genesis-php/genesis/genesis <b>--working-dir /var/www/myproject</b> mytask
-</code>
-
+Supported options:
+- <code>--working-dir /var/www/myproject</code> - use specified working directory
+- <code>--colors 0</code> - disable colored output
+- <code>--config myconfig.neon</code> - use specified config
 
 All arguments are passed to build:
 
