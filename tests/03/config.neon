@@ -1,38 +1,39 @@
 class: MyTest\TestBuild
-outputDirectory: %workingDirectory%/output
-projectRepositoryUrl: "git@github.com:adambisek/jenkins-test-skeleton.git"
+parameters:
+  outputDirectory: %workingDirectory%/output
+  projectRepositoryUrl: "git@github.com:adambisek/jenkins-test-skeleton.git"
 
-phpExecutable: "php"
-gitExecutable: "git"
+  phpExecutable: "php"
+  gitExecutable: "git"
 
-testPrograms:
-  git: sudo apt-get install git
-  lessc: sudo npm install -g less
-  mocha: sudo npm install -g mocha
-  php: sudo apt-get install php5-cli
-  phing: sudo pear channel-discover pear.phing.info; sudo pear install phing/phing
-  phpunit: sudo pear channel-discover pear.phpunit.de; sudo pear install phpunit/PHPUnit
-  stylus: sudo npm install -g stylus
-  tsc: sudo npm install -g typescript
-testPhp:
-  settings:
-    register_globals: FALSE
-  extensions:
-    - mysql
-testNodejs:
-  version: v0.10.10
+  testPrograms:
+    git: sudo apt-get install git
+    lessc: sudo npm install -g less
+    mocha: sudo npm install -g mocha
+    php: sudo apt-get install php5-cli
+    phing: sudo pear channel-discover pear.phing.info; sudo pear install phing/phing
+    phpunit: sudo pear channel-discover pear.phpunit.de; sudo pear install phpunit/PHPUnit
+    stylus: sudo npm install -g stylus
+    tsc: sudo npm install -g typescript
+  testPhp:
+    settings:
+      register_globals: FALSE
+    extensions:
+      - mysql
+  testNodejs:
+    version: v0.10.10
 
-directoriesToCreate:
-  "%outputDirectory%/data": "0777"
-  "%outputDirectory%/data/files": "0777"
-  "%outputDirectory%/public": "0777"
-symlinksToCreate:
-  "%outputDirectory%/public/filessym": "%outputDirectory%/data/files"
-filesToCopy:
-  "%workingDirectory%/gulpfile.js": "%outputDirectory%/gulpfile.js"
-  "%workingDirectory%/package.json": "%outputDirectory%/package.json"
-lessFiles:
-  "%workingDirectory%/test.less": "%outputDirectory%/test.css"
-phpUnit:
-  executable: "phpunit"
-  target: "%workingDirectory%"
+  directoriesToCreate:
+    "%outputDirectory%/data": "0777"
+    "%outputDirectory%/data/files": "0777"
+    "%outputDirectory%/public": "0777"
+  symlinksToCreate:
+    "%outputDirectory%/public/filessym": "%outputDirectory%/data/files"
+  filesToCopy:
+    "%workingDirectory%/gulpfile.js": "%outputDirectory%/gulpfile.js"
+    "%workingDirectory%/package.json": "%outputDirectory%/package.json"
+  lessFiles:
+    "%workingDirectory%/test.less": "%outputDirectory%/test.css"
+  phpUnit:
+    executable: "phpunit"
+    target: "%workingDirectory%"

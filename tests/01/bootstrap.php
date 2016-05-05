@@ -2,6 +2,9 @@
 
 require_once __DIR__ . '/TestBuild.php';
 
-return new Genesis\Config\Container([
+$container = new Genesis\Config\Container();
+$container->setParameters([
 	'myTestBootstrapKey' => 'val',
 ]);
+$container->addService('myService', new \ArrayObject);
+return $container;

@@ -1,2 +1,9 @@
 class: MyTest\TestBuild
-optionalConfigKey: optionalConfigVal
+parameters:
+	optionalConfigKey: optionalConfigVal
+
+services:
+	myService:
+		class: ArrayObject(['foo' => 'bar'])
+	myService2:
+		class: StdClass

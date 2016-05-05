@@ -62,8 +62,15 @@ class Bootstrap
 
 		$arguments = $inputArgs->getArguments();
 		$configFile = $inputArgs->getOption('config') ? $inputArgs->getOption('config') : self::DEFAULT_CONFIG_FILE;
-		$container = $this->createContainer($workingDir, $configFile, $container);
-		$build = $this->createBuild($container, $arguments);
+		try {
+			$container = $this->createContainer($workingDir, $configFile, $container);
+			$build = $this->createBuild($container, $arguments);
+		} catch (\Exception $e) {
+			$this->log("Exited with ERROR:", 'red');
+			$this->log($e->getMessage(), 'red');
+			echo $e->getTraceAsString() . PHP_EOL;
+			exit(255);
+		}
 		if (count($arguments) < 1) {
 			$this->log("Running default", 'green');
 			$build->runDefault();
@@ -120,7 +127,7 @@ class Bootstrap
 	 */
 	protected function createBuild(Container $container, array $arguments = NULL)
 	{
-		$class = $container->class;
+		$class = $container->getClass();
 		if (!class_exists($class, TRUE)) {
 			$this->log(sprintf(
 				"Build class '%s' was not found." . PHP_EOL .
@@ -133,8 +140,35 @@ class Bootstrap
 		if (!($build instanceof IBuild)) {
 			throw new \RuntimeException("Instance of build does not implements interface IBuild.");
 		}
+		$this->autowire($build, $container);
 		$build->setup();
 		return $build;
+	}
+
+
+	protected function autowire(IBuild $build, Container $container)
+	{
+		foreach ($this->getAutowiredProperties($build) as $property => $service) {
+			if(!$container->hasService($service)){
+				throw new \RuntimeException("Cannot found service '$service' to inject into " . get_class($build) . "::$property.");
+			}
+			$build->$property = $container->getService($service);
+		}
+	}
+
+
+	protected function getAutowiredProperties($class)
+	{
+		$return = [];
+		$reflectionClass = new \ReflectionClass($class);
+		foreach($reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $property){
+			$reflectionProp = new \ReflectionProperty($class, $property->getName());
+			$doc = $reflectionProp->getDocComment();
+			if(preg_match('#@inject ([^\s]+)\s#s', $doc, $matches)){
+				$return[$property->getName()] = $matches[1];
+			}
+		}
+		return $return;
 	}
 
 

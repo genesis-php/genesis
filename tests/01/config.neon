@@ -1,1 +1,6 @@
 class: MyTest\TestBuild
+services:
+	myService:
+		class: ArrayObject(['foo' => 'bar'])
+	myService2:
+		class: StdClass

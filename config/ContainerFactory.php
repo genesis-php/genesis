@@ -15,6 +15,7 @@ class ContainerFactory
 
 	private $configs;
 
+	/** @var Container[] */
 	private $containersToMerge;
 
 	private $workingDirectory;
@@ -65,20 +66,61 @@ class ContainerFactory
 			throw new \RuntimeException("No config added.");
 		}
 		$config = [
-			'workingDirectory' => $this->workingDirectory,
+			'parameters' => [
+				'workingDirectory' => $this->workingDirectory,
+			]
 		];
 		if($this->containersToMerge){
 			foreach ($this->containersToMerge as $containerToMerge) {
-				foreach ($containerToMerge as $k => $v) {
-					$config[$k] = $v;
+				foreach ($containerToMerge->getParameters() as $k => $v) {
+					$config['parameters'][$k] = $v;
+				}
+				foreach ($containerToMerge->getServices() as $k => $v) {
+					$config['services'][$k] = $v;
 				}
 			}
 		}
 		$configs = $this->resolveFiles($this->configs);
 		$config = $this->readConfigs($configs, $config);
-
 		$config = $this->parseValues($config);
-		return new Container($config);
+
+		// BC break check
+		$mainSections = ['includes', 'class', 'parameters', 'services'];
+		foreach($config as $key => $val){
+			if(!in_array($key, $mainSections)) {
+				throw new \RuntimeException("Since version 2.0 are supported main only these sections: " . implode(", ", $mainSections) . ". Section '$key' found. Move your variables into parameters section.");
+			}
+		}
+
+		$container = new Container();
+		$container->setClass($config['class']);
+		if(isset($config['parameters'])){
+			$container->setParameters($config['parameters']);
+		}
+		if(isset($config['services'])){
+			foreach($config['services'] as $name => $config){
+				if(!is_array($config)){
+					$container->addService($name, $config); // is directly service object from merged container
+					continue;
+				}
+				$class = $config['class'];
+				$arguments = [];
+				if($config['class'] instanceof \Nette\Neon\Entity){
+					$class = $config['class']->value;
+					$arguments = $config['class']->attributes;
+				}
+				$reflectionClass = new \ReflectionClass($class);
+				$service = $reflectionClass->newInstanceArgs($arguments);
+				if(isset($config['setup'])){
+					foreach($config['setup'] as $neonEntity){
+						call_user_func_array(array($service, $neonEntity->value), $neonEntity->attributes);
+					}
+				}
+				$container->addService($name, $service);
+			}
+		}
+
+		return $container;
 	}
 
 
@@ -129,7 +171,16 @@ class ContainerFactory
 	{
 		$config = $this->resolveUnmergables($config);
 		foreach ($config as $key => $value) {
-			if (is_array($value)) {
+			if($value instanceof \Nette\Neon\Entity){
+				$value->value = $this->parseValue($value->value, $allConfig);
+				foreach($value->attributes as $k => $v){
+					if(is_array($v)){
+						$value->attributes[$k] = $this->parseValues($v, $allConfig, array_merge($keysPath, [$key]));
+					}else{
+						$value->attributes[$k] = $this->parseValue($v, $allConfig);
+					}
+				}
+			}elseif (is_array($value)) {
 				$value = $this->parseValues($value, $allConfig, array_merge($keysPath, [$key]));
 			} elseif(!is_object($value)) {
 				$value = $this->parseValue($value, $allConfig);
@@ -155,10 +206,10 @@ class ContainerFactory
 	{
 		if (preg_match_all('#%([^%]+)%#', $value, $matches)) {
 			foreach ($matches[1] as $match) {
-				if (!array_key_exists($match, $config)) {
+				if (!array_key_exists($match, $config['parameters'])) {
 					throw new \RuntimeException("Cannot find variable '$match'.");
 				}
-				$value = str_replace("%$match%", $config[$match], $value); // TODO: nested variables
+				$value = str_replace("%$match%", $config['parameters'][$match], $value); // TODO: nested variables
 			}
 		}
 		return $value;

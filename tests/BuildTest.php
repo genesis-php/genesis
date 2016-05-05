@@ -22,7 +22,7 @@ class BuildTest extends BaseTest
 	{
 		// may not throw exception
 		ob_start();
-		$container = new Container([]);
+		$container = new Container();
 		$build = new TestBuild($container);
 		$build->runDefault();
 		ob_end_clean();
@@ -33,7 +33,7 @@ class BuildTest extends BaseTest
 	{
 		// may not throw exception
 		ob_start();
-		$container = new Container([]);
+		$container = new Container();
 		$build = new TestBuild($container);
 		$build->runInfo();
 		ob_end_clean();
@@ -47,7 +47,7 @@ class BuildTest extends BaseTest
 	 */
 	public function testError()
 	{
-		$container = new Container([]);
+		$container = new Container();
 		$build = new TestBuild($container);
 		$build->runError();
 	}
@@ -56,7 +56,7 @@ class BuildTest extends BaseTest
 	public function testArguments()
 	{
 		ob_start();
-		$container = new Container([]);
+		$container = new Container();
 		$build = new TestBuild($container, ['myArgument', 'myArgument2']);
 		$build->runShowArguments();
 		$output = ob_get_clean();

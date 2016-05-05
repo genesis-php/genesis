@@ -1,0 +1,15 @@
+class: MyTest\NonExistingClass
+config:
+	someVar: someValue
+	anotherVar:
+something:
+	somethingNested:
+	config: 'i am buggy?'
+mergeMe:
+	key: val
+doNotMergeMe:
+	key: val
+doNotMergeMeRecursive:
+	doNotMergeField:
+		anotherKey:
+			val

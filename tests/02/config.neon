@@ -1,15 +1,24 @@
 class: MyTest\NonExistingClass
-config:
-	someVar: someValue
-	anotherVar:
-something:
-	somethingNested:
-	config: 'i am buggy?'
-mergeMe:
-	key: val
-doNotMergeMe:
-	key: val
-doNotMergeMeRecursive:
-	doNotMergeField:
-		anotherKey:
-			val
+parameters:
+	config:
+		someVar: someValue
+		anotherVar:
+	something:
+		somethingNested:
+		config: 'i am buggy?'
+	mergeMe:
+		key: val
+	doNotMergeMe:
+		key: val
+	doNotMergeMeRecursive:
+		doNotMergeField:
+			anotherKey:
+				val
+	minutes: 10
+services:
+	myservice:
+		class: Datetime('+ 1 day')
+		setup:
+			- setTime(%minutes%, 10, 10)
+	myservice2:
+		class: Datetime

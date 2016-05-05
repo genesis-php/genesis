@@ -34,12 +34,16 @@ class CliTest extends BaseTest
 	}
 
 
-	public function testShowBootstrapContainerValue() // test, if returned Container from bootstrap is merged into Container
+	public function testShowBootstrapContainer() // test, if returned Container from bootstrap is merged into Container
 	{
 		$result = $this->execute('showContainerValue myTestBootstrapKey');
 		$this->assertEquals(0, $result['code']);
 		$line = $result['output'][7];
 		$this->assertContains('"val"', $line);
+		$result = $this->execute('showServiceClass myService');
+		$this->assertEquals(0, $result['code']);
+		$line = $result['output'][7];
+		$this->assertContains('ArrayObject', $line);
 	}
 
 
@@ -150,6 +154,38 @@ class CliTest extends BaseTest
 		$this->assertEquals(0, $result['code']);
 		$line = $result['output'][7];
 		$this->assertContains('"optionalConfigVal"', $line);
+	}
+
+
+	public function testAutowiring()
+	{
+		$result = $this->execute('showAutowiredClass testService', [
+			'working-dir' => 'tests/01',
+			'config' => 'config.neon',
+		]);
+		$this->assertEquals(0, $result['code']);
+		$line = $result['output'][7];
+		$this->assertContains('ArrayObject', $line);
+
+		$result = $this->execute('showAutowiredClass testService2', [
+			'working-dir' => 'tests/01',
+			'config' => 'config.neon',
+		]);
+		$this->assertEquals(0, $result['code']);
+		$line = $result['output'][7];
+		$this->assertContains('stdClass', $line);
+	}
+
+
+	public function testAutowiringFail()
+	{
+		$result = $this->execute('showAutowiredClass testService', [
+			'working-dir' => 'tests/01',
+			'config' => 'configAutowireFail.neon',
+		]);
+		$this->assertEquals(255, $result['code']);
+		$line = $result['output'][7];
+		$this->assertContains('Cannot found service \'myService\' to inject into', $line);
 	}
 
 }
