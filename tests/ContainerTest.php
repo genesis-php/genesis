@@ -134,6 +134,8 @@ class ContainerTest extends BaseTest
 		$this->assertEquals('includedVal', $container->getParameter('includedKey'));
 		$this->assertInstanceOf('DateTime', $container->getService('myservice'));
 		$this->assertEquals(date('Y-m-d', strtotime('+ 1 day')), $container->getService('myservice')->format('Y-m-d'));
+		// nested variables
+		$this->assertEquals('val', $container->getParameter('nestedValue'));
 	}
 
 

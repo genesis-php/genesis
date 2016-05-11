@@ -13,18 +13,70 @@ class SelfInit extends Command
 
 	private $distDirectory;
 
+	private $workingDirectory;
 
+	private $dirname = 'build';
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getDistDirectory()
+	{
+		return $this->distDirectory;
+	}
+
+
+	/**
+	 * @param mixed $distDirectory
+	 */
 	public function setDistDirectory($distDirectory)
 	{
 		$this->distDirectory = $distDirectory;
 	}
 
 
-	public function execute($workingDirectory, $dir)
+	/**
+	 * @return mixed
+	 */
+	public function getWorkingDirectory()
 	{
-		$buildDir = $workingDirectory . DIRECTORY_SEPARATOR . $dir;
+		return $this->workingDirectory;
+	}
+
+
+	/**
+	 * @param mixed $workingDirectory
+	 */
+	public function setWorkingDirectory($workingDirectory)
+	{
+		$this->workingDirectory = $workingDirectory;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getDirname()
+	{
+		return $this->dirname;
+	}
+
+
+	/**
+	 * @param string $dirname
+	 */
+	public function setDirname($dirname)
+	{
+		$this->dirname = $dirname;
+	}
+
+
+	public function execute()
+	{
+		$buildDir = $this->workingDirectory . DIRECTORY_SEPARATOR . $this->dirname;
 		if(is_dir($buildDir)){
-			$this->error("Directory '$dir' in working directory '$workingDirectory' already exists.");
+			$this->error("Directory '$this->dirname' in working directory '$this->workingDirectory' already exists.");
 		}
 		$directory = new Filesystem\Directory();
 		$directory->create($buildDir);
@@ -39,7 +91,7 @@ class SelfInit extends Command
 		}
 
 		$this->log("Build initialized in '$buildDir'.", self::SUCCESS);
-		$this->log("You can start by typing '$dir/build' in '$workingDirectory'.", self::SUCCESS);
+		$this->log("You can start by typing '$this->dirname/build' in '$this->workingDirectory'.", self::SUCCESS);
 	}
 
 }

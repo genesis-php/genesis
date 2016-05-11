@@ -10,10 +10,31 @@ namespace Genesis\Commands;
 class Help extends Command
 {
 
-	public function execute($tasks)
+	private $tasks = [];
+
+
+	/**
+	 * @return array
+	 */
+	public function getTasks()
+	{
+		return $this->tasks;
+	}
+
+
+	/**
+	 * @param array $tasks
+	 */
+	public function setTasks($tasks)
+	{
+		$this->tasks = $tasks;
+	}
+
+
+	public function execute()
 	{
 		echo "Available tasks:" . PHP_EOL;
-		foreach ($tasks as $task) {
+		foreach ($this->tasks as $task) {
 			echo "- $task" . PHP_EOL;
 		}
 	}

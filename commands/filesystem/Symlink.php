@@ -32,7 +32,8 @@ class Symlink extends Command
 		}
 		$cmd = 'cd ' . escapeshellarg($directory) . ' && ln -s  ' . escapeshellarg($target) . ' ' . escapeshellarg($link);
 		$command = new Commands\Exec();
-		$result = $command->execute($cmd);
+		$command->setCommand($cmd);
+		$result = $command->execute();
 		if ($result->getResult() !== 0) {
 			$this->error("Cannot create symlink '$target' - '$link' in directory '$directory'.");
 		}

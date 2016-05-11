@@ -113,6 +113,9 @@ class ContainerFactory
 				$service = $reflectionClass->newInstanceArgs($arguments);
 				if(isset($config['setup'])){
 					foreach($config['setup'] as $neonEntity){
+						if(!method_exists($service, $neonEntity->value)){
+							throw new \RuntimeException("Class $class does not have method $neonEntity->value().");
+						}
 						call_user_func_array(array($service, $neonEntity->value), $neonEntity->attributes);
 					}
 				}
@@ -196,7 +199,9 @@ class ContainerFactory
 			foreach ($keysPath as $kp) {
 				$v =& $v[$kp];
 			}
-			$v[$newKey] = $value;
+			if(!($value instanceof \Nette\Neon\Entity)) {
+				$v[$newKey] = $value;
+			}
 		}
 		return $config;
 	}
@@ -206,10 +211,20 @@ class ContainerFactory
 	{
 		if (preg_match_all('#%([^%]+)%#', $value, $matches)) {
 			foreach ($matches[1] as $match) {
-				if (!array_key_exists($match, $config['parameters'])) {
-					throw new \RuntimeException("Cannot find variable '$match'.");
+				$parameter = $config['parameters'];
+				foreach(explode(".", $match) as $m){
+					if (!array_key_exists($m, $parameter)) {
+						throw new \RuntimeException("Cannot find variable '$match', part '$m'.");
+					}
+					$parameter = $parameter[$m];
 				}
-				$value = str_replace("%$match%", $config['parameters'][$match], $value); // TODO: nested variables
+				if(is_array($parameter)){
+					if("%$match%" !== $value){ // if is variable value an array, must not be part of a string
+						throw new \RuntimeException("Array value cannot be part of a string.");
+					}
+					return $parameter;
+				}
+				$value = str_replace("%$match%", $parameter, $value);
 			}
 		}
 		return $value;

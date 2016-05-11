@@ -11,15 +11,47 @@ class Git extends Command
 {
 
 	/** @var string */
-	private $gitExecutable;
+	private $gitExecutable = 'git';
+
+	private $command;
 
 
-	public function __construct($gitExecutable = 'git')
+	/**
+	 * @return string
+	 */
+	public function getGitExecutable()
+	{
+		return $this->gitExecutable;
+	}
+
+
+	/**
+	 * @param string $gitExecutable
+	 */
+	public function setGitExecutable($gitExecutable)
 	{
 		if ($gitExecutable == '') {
 			throw new \InvalidArgumentException("Git executable cannot be empty.");
 		}
 		$this->gitExecutable = $gitExecutable;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getCommand()
+	{
+		return $this->command;
+	}
+
+
+	/**
+	 * @param mixed $command
+	 */
+	public function setCommand($command)
+	{
+		$this->command = $command;
 	}
 
 
@@ -29,20 +61,21 @@ class Git extends Command
 		$command .= " --depth 1 --recursive $url";
 		$command .= ($branch ? " --branch $branch" : '');
 		$command .= ($dir ? ' ' . escapeshellarg($dir) : '');
-		return $this->exec($command);
+		$this->setCommand($command);
 	}
 
 
-	public function execute($cmd)
+	public function execute()
 	{
-		return $this->exec(escapeshellarg($this->gitExecutable) . ' ' . $cmd);
+		return $this->exec(escapeshellarg($this->gitExecutable) . ' ' . $this->command);
 	}
 
 
 	private function exec($command)
 	{
 		$exec = new Exec();
-		return $exec->execute($command);
+		$exec->setCommand($command);
+		return $exec->execute();
 	}
 
 }

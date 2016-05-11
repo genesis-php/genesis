@@ -15,22 +15,43 @@ class NodeJs extends Command
 
 	private $nodeVersionCommand = 'node -v';
 
+	private $requiredVersion;
 
-	public function execute($requiredVersion)
+
+	/**
+	 * @return float
+	 */
+	public function getRequiredVersion()
+	{
+		return $this->requiredVersion;
+	}
+
+
+	/**
+	 * @param float $requiredVersion
+	 */
+	public function setRequiredVersion($requiredVersion)
+	{
+		$this->requiredVersion = $requiredVersion;
+	}
+
+
+	public function execute()
 	{
 		$cmd = $this->nodeVersionCommand;
 		$command = new Commands\Exec();
-		$result = $command->execute($cmd);
+		$command->setCommand($cmd);
+		$result = $command->execute();
 		if ($result->getResult() !== 0) {
-			$this->error(sprintf('Execution of command "%s" failed.', $command));
+			$this->error(sprintf('Execution of command "%s" failed.', $cmd));
 		}
 
 		$version = $result->getOutput()[0];
-		if (version_compare($version, $requiredVersion) < 0) {
-			$this->error(sprintf('Node.JS is not current. Version %s required, but %s is installed.', $requiredVersion, $version));
+		if (version_compare($version, $this->requiredVersion) < 0) {
+			$this->error(sprintf('Node.JS is not current. Version %s required, but %s is installed.', $this->requiredVersion, $version));
 		}
 
-		$this->log(sprintf('Required Node.JS version %s satisfied with installed version %s.', $requiredVersion, $version));
+		$this->log(sprintf('Required Node.JS version %s satisfied with installed version %s.', $this->requiredVersion, $version));
 	}
 
 }

@@ -41,12 +41,12 @@ An 'build' directory will be created, with these files:
 	- [for example](https://github.com/genesis-php/genesis/blob/master/build-dist/Build.php)
 - <b>config.neon</b>
 	- config in [NEON](http://ne-on.org) format (very similar to YAML)
-	- define build class and some variables, you need
-	- if you don't want to merge any config variable, add ! (exclamation mark), eg:<br>
-	<code>myParam!: unoverrided value</code>
+	- define parameters and services
 	- you can include another configs directly in NEON file:<br>
 		<code>includes:</code><br>
 		<code>  - include.neon</code>
+	- if you don't want to merge any config variable, add ! (exclamation mark), eg:<br>
+	<code>myParam!: unoverrided value</code>
 	- [for example](https://github.com/genesis-php/genesis/blob/master/build-dist/config.neon)
 - <b>bootstrap.php</b> (optional)
 	- to load Build class and other classes
@@ -118,6 +118,8 @@ In namespace Genesis\Commands are default commands and of course you can create 
 	- using NodeJs lessc tool
 
 <h3>Filesystem</h3>
+- [Filesystem\Filesystem](https://github.com/genesis-php/genesis/blob/master/commands/filesystem/Filesystem.php)
+	- configurable object, intended to use as service
 - [Filesystem\Directory](https://github.com/genesis-php/genesis/blob/master/commands/filesystem/Directory.php)
 	- provides set of methods for manipulating with directories
 	- creating, cleaning (purging), reading

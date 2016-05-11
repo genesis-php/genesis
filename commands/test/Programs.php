@@ -12,10 +12,31 @@ use Genesis\Commands\Command;
 class Programs extends Command
 {
 
-	public function execute(array $programs)
+	private $requiredPrograms;
+
+
+	/**
+	 * @return array
+	 */
+	public function getRequiredPrograms()
+	{
+		return $this->requiredPrograms;
+	}
+
+
+	/**
+	 * @param array $requiredPrograms
+	 */
+	public function setRequiredPrograms($requiredPrograms)
+	{
+		$this->requiredPrograms = $requiredPrograms;
+	}
+
+
+	public function execute()
 	{
 		$errors = array();
-		foreach ($programs as $program => $howToInstallCommand) {
+		foreach ($this->requiredPrograms as $program => $howToInstallCommand) {
 			exec('command -v ' . escapeshellarg($program) . ' >/dev/null 2>&1', $output, $return);
 			if ($return !== 0) {
 				$errors[] = 'Required program "' . $program . '" is not installed.';

@@ -27,6 +27,12 @@ class TestBuild extends Genesis\Build
 	 */
 	public $testService2;
 
+	/**
+	 * @var \ArrayObject
+	 * @inject
+	 */
+	public $myService; // injected without definition
+
 
 	public function runInfo()
 	{

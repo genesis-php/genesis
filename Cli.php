@@ -28,6 +28,9 @@ class Cli
 		if(!self::$enableColors){
 			return $string;
 		}
+		if($foreground === NULL && $background === NULL){
+			return $string;
+		}
 
 		$colored = "";
 		if (isset(self::$foregroundColors[$foreground])) {

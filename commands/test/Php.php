@@ -15,14 +15,36 @@ class Php extends Command
 	/** @var string[] */
 	private $errors;
 
+	private $settings;
 
-	public function execute(array $settings)
+
+	/**
+	 * @return array
+	 */
+	public function getSettings()
 	{
-		if (isset($settings['settings'])) {
-			$this->testSettings($settings['settings']);
+		return $this->settings;
+	}
+
+
+	/**
+	 * @param array $settings
+	 */
+	public function setSettings($settings)
+	{
+		$this->settings = $settings;
+	}
+
+
+	public function execute()
+	{
+		$this->errors = NULL;
+
+		if (isset($this->settings['settings'])) {
+			$this->testSettings($this->settings['settings']);
 		}
-		if (isset($settings['extensions'])) {
-			$this->testExtensions($settings['extensions']);
+		if (isset($this->settings['extensions'])) {
+			$this->testExtensions($this->settings['extensions']);
 		}
 
 		if (!empty($this->errors)) {

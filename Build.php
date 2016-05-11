@@ -34,7 +34,8 @@ class Build implements IBuild
 	{
 		$tasks = $this->detectAvailableTasks();
 		$helpCommand = new Commands\Help;
-		$helpCommand->execute($tasks);
+		$helpCommand->setTasks($tasks);
+		$helpCommand->execute();
 	}
 
 

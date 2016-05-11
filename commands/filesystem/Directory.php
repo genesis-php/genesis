@@ -26,13 +26,22 @@ class Directory extends Command
 		foreach ($this->read($directory) as $file) {
 			if ($file->isLink()) {
 				$this->checkPath($file->getPathName(), $directory);
-				unlink($file->getPathname());
+				$result = @unlink($file->getPathname());
+				if(!$result){
+					$this->error("Cannot delete symlink '$file'.");
+				}
 			} elseif ($file->isDir()) {
 				$this->checkPath($file->getPathName(), $directory);
-				rmdir($file->getPathName());
+				$result = @rmdir($file->getPathName());
+				if(!$result){
+					$this->error("Cannot delete file '$file'.");
+				}
 			} elseif ($file->isFile()) {
 				$this->checkPath($file->getPathName(), $directory);
-				unlink($file->getPathname());
+				$result = @unlink($file->getPathname());
+				if(!$result){
+					$this->error("Cannot delete file '$file'.");
+				}
 			}
 		}
 	}

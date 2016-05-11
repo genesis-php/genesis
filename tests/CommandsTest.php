@@ -30,7 +30,8 @@ class CommandsTest extends BaseTest
 	{
 		ob_start();
 		$exec = new Commands\Exec();
-		$result = $exec->execute('echo "testexec"');
+		$exec->setCommand('echo "testexec"');
+		$result = $exec->execute();
 		$output = $result->getOutput();
 		$line = $output[0];
 		$this->assertEquals('testexec', $line);
@@ -42,7 +43,8 @@ class CommandsTest extends BaseTest
 	{
 		ob_start();
 		$git = new Commands\Git();
-		$result = $git->execute('--version');
+		$git->setCommand('--version');
+		$result = $git->execute();
 		$output = $result->getOutput();
 		$line = $output[0];
 		$this->assertContains('git version ', $line);
@@ -54,7 +56,8 @@ class CommandsTest extends BaseTest
 	{
 		ob_start();
 		$help = new Commands\Help();
-		$help->execute([]);
+		$help->setTasks([]);
+		$help->execute();
 		$this->assertContains('Available tasks:', ob_get_clean());
 	}
 
@@ -70,10 +73,12 @@ class CommandsTest extends BaseTest
 		$command->copy($workingDir . '/package.json', $outputDir . '/package.json');
 
 		ob_start();
-		$command = new Commands\NodeJs();
-		$command->installPackages($outputDir, [
+		$command = new Commands\NodeJs\PackageInstaller();
+		$command->setDirectory($outputDir);
+		$command->setOptions([
 			'silent' => TRUE,
 		]);
+		$command->execute();
 		$this->assertFileExists($outputDir . '/node_modules');
 		$this->assertNotContains('Error', ob_get_clean());
 
@@ -86,10 +91,13 @@ class CommandsTest extends BaseTest
 	{
 		$workingDir = __DIR__ . '/03';
 		ob_start();
-		$command = new Commands\PHPUnit();
-		$command->execute($workingDir, $workingDir, [
+		$command = new Commands\PhpUnit();
+		$command->setWorkingDir($workingDir);
+		$command->setTarget($workingDir);
+		$command->setOptions([
 			'executable' => 'phpunit',
 		]);
+		$command->execute();
 		$this->assertNotContains('Error', ob_get_clean());
 	}
 
@@ -102,8 +110,9 @@ class CommandsTest extends BaseTest
 
 		$selfInit = new Commands\SelfInit();
 		$selfInit->setDistDirectory(__DIR__ . '/../build-dist');
+		$selfInit->setWorkingDirectory($dir);
 		ob_start();
-		$selfInit->execute($dir, 'build');
+		$selfInit->execute();
 		ob_end_clean();
 		$res = glob($dir . "/build/*");
 		$this->assertCount(4, $res);
@@ -154,6 +163,39 @@ class CommandsTest extends BaseTest
 		$command->clean($dir);
 		$res = glob($dir . "/*");
 		$this->assertCount(0, $res);
+
+		// filesystem class
+		$command = new Commands\Filesystem\Filesystem();
+		$command->addDirectoriesToCreate([
+			$dir . '/testfs1' => 777,
+		]);
+		$command->addDirectoriesToCreate([
+			$dir . '/testfs2' => 777,
+		]);
+		$command->addFilesToCopy([
+			$dir . '/testfs2/test.js' => $dir . '/../gulpfile.js',
+		]);
+		$command->addSymlinksRelativeToCreate([
+			'symlink' => '../'
+		], $dir);
+		ob_start();
+		$command->execute();
+		ob_end_clean();
+		$res = glob($dir . "/*");
+		$this->assertCount(3, $res);
+		$this->assertTrue(is_dir($dir . '/testfs1'));
+		$this->assertTrue(is_dir($dir . '/testfs2'));
+		$this->assertFileExists($dir . '/testfs2/test.js');
+		$this->assertTrue(is_link($dir . '/symlink'));
+		$command = new Commands\Filesystem\Filesystem();
+		$command->addDirectoriesToClean([
+			$dir,
+		]);
+		ob_start();
+		$command->execute();
+		ob_end_clean();
+		$res = glob($dir . "/*");
+		$this->assertCount(0, $res);
 	}
 
 
@@ -174,24 +216,28 @@ class CommandsTest extends BaseTest
 		$command->copy($dir . '/test.less', $outputDir . '/test.less');
 
 		ob_start();
-		$command = new Commands\NodeJs();
-		$command->installPackages($outputDir, [
+		$command = new Commands\NodeJs\PackageInstaller();
+		$command->setDirectory($outputDir);
+		$command->setOptions([
 			'silent' => TRUE,
 		]);
+		$command->execute();
 		ob_end_clean();
 
 		ob_start();
 		$command = new Commands\Assets\Gulp();
-		$command->run($outputDir, 'test');
+		$command->setDirectory($outputDir);
+		$command->execute('test');
 		$contents = ob_get_clean();
 		$this->assertContains("Starting 'test'", $contents);
 		$this->assertContains("Running test in Gulp.", $contents);
 
 		ob_start();
 		$command = new Commands\Assets\Less();
-		$command->compile([
+		$command->setFiles([
 			$outputDir . '/test.less' => $outputDir . '/test.css',
 		]);
+		$command->execute();
 		ob_end_clean();
 		$this->assertFileExists($outputDir . '/test.css');
 
@@ -210,9 +256,10 @@ class CommandsTest extends BaseTest
 	public function testTestProgramsFail()
 	{
 		$command = new Commands\Test\Programs();
-		$command->execute([
+		$command->setRequiredPrograms([
 			'phppp' => 'sudo apt-get install php5-cli',
 		]);
+		$command->execute();
 	}
 
 
@@ -220,9 +267,10 @@ class CommandsTest extends BaseTest
 	{
 		ob_start();
 		$command = new Commands\Test\Programs();
-		$command->execute([
+		$command->setRequiredPrograms([
 			'php' => 'sudo apt-get install php5-cli',
 		]);
+		$command->execute();
 		$this->assertNotContains('Error', ob_get_clean());
 	}
 
@@ -231,13 +279,14 @@ class CommandsTest extends BaseTest
 	{
 		ob_start();
 		$command = new Commands\Test\Php();
-		$command->execute([
+		$command->setSettings([
 			'settings' => [
 				'register_globals' => FALSE,
 			], 'extensions' => [
 				'PDO',
 			],
 		]);
+		$command->execute();
 		$this->assertNotContains('Error', ob_get_clean());
 	}
 
@@ -252,7 +301,8 @@ class CommandsTest extends BaseTest
 		ob_start();
 		try {
 			$command = new Commands\Test\NodeJs();
-			$command->execute('v299.10.10');
+			$command->setRequiredVersion('v299.10.10');
+			$command->execute();
 		} catch (\Exception $e) {
 			ob_end_clean();
 			throw $e;
@@ -265,7 +315,8 @@ class CommandsTest extends BaseTest
 	{
 		ob_start();
 		$command = new Commands\Test\NodeJs();
-		$command->execute('v0.10.10');
+		$command->setRequiredVersion('v0.10.10');
+		$command->execute();
 		$this->assertNotContains('Error', ob_get_clean());
 	}
 

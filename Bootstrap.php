@@ -41,7 +41,9 @@ class Bootstrap
 			$directoryName = isset($arguments[1]) ? $arguments[1] : 'build';
 			$selfInit = new Commands\SelfInit();
 			$selfInit->setDistDirectory(__DIR__ . '/build-dist');
-			$selfInit->execute($workingDir, $directoryName);
+			$selfInit->setWorkingDirectory($workingDir);
+			$selfInit->setDirname($directoryName);
+			$selfInit->execute();
 			exit(0);
 		}
 
@@ -164,8 +166,8 @@ class Bootstrap
 		foreach($reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $property){
 			$reflectionProp = new \ReflectionProperty($class, $property->getName());
 			$doc = $reflectionProp->getDocComment();
-			if(preg_match('#@inject ([^\s]+)\s#s', $doc, $matches)){
-				$return[$property->getName()] = $matches[1];
+			if(preg_match('#@inject ?([^\s]*)\s#s', $doc, $matches)){
+				$return[$property->getName()] = trim($matches[1]) !== '' ? $matches[1] : $property->getName();
 			}
 		}
 		return $return;

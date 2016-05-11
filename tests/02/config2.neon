@@ -12,3 +12,4 @@ parameters:
 		doNotMergeField!:
 			anotherKey2:
 				anotherVal
+	nestedValue: %mergeMe.key2%
