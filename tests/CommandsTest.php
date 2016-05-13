@@ -56,9 +56,16 @@ class CommandsTest extends BaseTest
 	{
 		ob_start();
 		$help = new Commands\Help();
-		$help->setTasks([]);
+		$help->addSection('mySection');
+		$help->addSection('mySection2');
+		$help->setSectionTasks('mySection', ['myTask' => 'myTaskDesc']);
 		$help->execute();
-		$this->assertContains('Available tasks:', ob_get_clean());
+		$contents = ob_get_clean();
+		$this->assertContains('Available tasks:', $contents);
+		$this->assertContains('mySection', $contents);
+		$this->assertContains('mySection2', $contents);
+		$this->assertContains('myTask', $contents);
+		$this->assertContains('myTaskDesc', $contents);
 	}
 
 

@@ -34,7 +34,8 @@ class Build implements IBuild
 	{
 		$tasks = $this->detectAvailableTasks();
 		$helpCommand = new Commands\Help;
-		$helpCommand->setTasks($tasks);
+		$helpCommand->addSection('');
+		$helpCommand->setSectionTasks('', $tasks);
 		$helpCommand->execute();
 	}
 
@@ -45,7 +46,7 @@ class Build implements IBuild
 		$classReflection = new \ReflectionClass($this);
 		foreach ($classReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
 			if (preg_match('#^run(.*)#', $method->getName(), $match)) {
-				$tasks[] = lcfirst($match[1]);
+				$tasks[lcfirst($match[1])] = NULL;
 			}
 		}
 		return $tasks;
