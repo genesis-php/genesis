@@ -34,6 +34,10 @@ class TestBuild extends Genesis\Build
 	public $myService; // injected without definition
 
 
+	/**
+	 * My task description
+	 * @return void
+	 */
 	public function runInfo()
 	{
 		$this->logSection('This is Section with info.');

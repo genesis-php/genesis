@@ -46,7 +46,12 @@ class Build implements IBuild
 		$classReflection = new \ReflectionClass($this);
 		foreach ($classReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
 			if (preg_match('#^run(.*)#', $method->getName(), $match)) {
-				$tasks[lcfirst($match[1])] = NULL;
+				$doc = $method->getDocComment();
+				$description = NULL;
+				if(preg_match('#([^@][a-zA-Z0-9]+)+#', $doc, $m)){
+					$description = trim($m[0]);
+				}
+				$tasks[lcfirst($match[1])] = $description != '' ? $description : NULL;
 			}
 		}
 		return $tasks;
