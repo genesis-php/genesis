@@ -37,6 +37,7 @@ class TestBuild extends Genesis\Build
 	/**
 	 * My task description
 	 * @return void
+	 * @section mySection
 	 */
 	public function runInfo()
 	{

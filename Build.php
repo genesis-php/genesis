@@ -32,10 +32,13 @@ class Build implements IBuild
 
 	public function runDefault()
 	{
-		$tasks = $this->detectAvailableTasks();
 		$helpCommand = new Commands\Help;
-		$helpCommand->addSection('');
-		$helpCommand->setSectionTasks('', $tasks);
+		foreach ($this->detectAvailableTasks() as $section => $tasks) {
+			if(!$helpCommand->hasSection($section)){
+				$helpCommand->addSection($section);
+			}
+			$helpCommand->setSectionTasks($section, $tasks);
+		}
 		$helpCommand->execute();
 	}
 
@@ -47,11 +50,15 @@ class Build implements IBuild
 		foreach ($classReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
 			if (preg_match('#^run(.*)#', $method->getName(), $match)) {
 				$doc = $method->getDocComment();
+				$section = NULL;
+				if(preg_match('#@section ?([^\s]*)\s#s', $doc, $m)){
+					$section = trim($m[1]);
+				}
 				$description = NULL;
 				if(preg_match('#([^@][a-zA-Z0-9]+)+#', $doc, $m)){
 					$description = trim($m[0]);
 				}
-				$tasks[lcfirst($match[1])] = $description != '' ? $description : NULL;
+				$tasks[$section][lcfirst($match[1])] = $description != '' ? $description : NULL;
 			}
 		}
 		return $tasks;
