@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-CURRENT_FILE="$CURRENT_DIR/build"
+FILENAME="$(basename "$0")"
+CURRENT_FILE="$CURRENT_DIR/$FILENAME"
 
 COMPOSER_PATH="${CURRENT_DIR}/../vendor"
-EXECUTABLE=${COMPOSER_PATH}/genesis-php/genesis/genesis
+EXECUTABLE=${COMPOSER_PATH}/bin/genesis
 
 if [ ! -f ${EXECUTABLE} ]; then
     echo "Genesis library not found. Do you have installed dependencies via?: composer install\n"
