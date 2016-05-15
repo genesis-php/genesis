@@ -26,7 +26,7 @@ class CliTest extends BaseTest
 	public function testWrongBootstrapReturn()
 	{
 		$result = $this->execute('task', [
-			'working-dir' => 'tests/04',
+			'working-dir' => '04',
 		]);
 		$this->assertEquals(255, $result['code']);
 		$line = $result['output'][6];
@@ -84,7 +84,7 @@ class CliTest extends BaseTest
 		$command->create($dir);
 
 		$result = $this->execute('self-init', [
-			'working-dir' => 'tests/self-init',
+			'working-dir' => 'self-init',
 		]);
 		$this->assertEquals(0, $result['code']);
 		$line = $result['output'][5];
@@ -100,14 +100,14 @@ class CliTest extends BaseTest
 	public function testWrongWorkingDir()
 	{
 		$result = $this->execute('', [
-			'working-dir' => 'tests/workingDirNonExisting',
+			'working-dir' => 'workingDirNonExisting',
 		]);
 		$this->assertEquals(255, $result['code']);
 		$line = $result['output'][5];
-		$this->assertContains("Working dir 'tests/workingDirNonExisting' does not exists", $line);
+		$this->assertContains("Working dir 'workingDirNonExisting' does not exists", $line);
 
 		$result = $this->execute('', [
-			'working-dir' => '.',
+			'working-dir' => '../',
 		]);
 		$this->assertEquals(255, $result['code']);
 		$line = $result['output'][5];
@@ -126,7 +126,7 @@ class CliTest extends BaseTest
 	public function testNonExistingBuild()
 	{
 		$result = $this->execute('task', [
-			'working-dir' => 'tests/02',
+			'working-dir' => '02',
 		]);
 		$this->assertEquals(255, $result['code']);
 		$line = $result['output'][6];
@@ -137,7 +137,7 @@ class CliTest extends BaseTest
 	public function testExistingBuild()
 	{
 		$result = $this->execute('info', [
-			'working-dir' => 'tests/01',
+			'working-dir' => '01',
 		]);
 		$this->assertEquals(0, $result['code']);
 		$line = $result['output'][6];
@@ -148,7 +148,7 @@ class CliTest extends BaseTest
 	public function testOptionalConfigBuild()
 	{
 		$result = $this->execute('showContainerValue optionalConfigKey', [
-			'working-dir' => 'tests/01',
+			'working-dir' => '01',
 			'config' => 'optionalConfig.neon',
 		]);
 		$this->assertEquals(0, $result['code']);
@@ -160,7 +160,7 @@ class CliTest extends BaseTest
 	public function testAutowiring()
 	{
 		$result = $this->execute('showAutowiredClass testService', [
-			'working-dir' => 'tests/01',
+			'working-dir' => '01',
 			'config' => 'config.neon',
 		]);
 		$this->assertEquals(0, $result['code']);
@@ -168,7 +168,7 @@ class CliTest extends BaseTest
 		$this->assertContains('ArrayObject', $line);
 
 		$result = $this->execute('showAutowiredClass testService2', [
-			'working-dir' => 'tests/01',
+			'working-dir' => '01',
 			'config' => 'config.neon',
 		]);
 		$this->assertEquals(0, $result['code']);
@@ -180,7 +180,7 @@ class CliTest extends BaseTest
 	public function testAutowiringFail()
 	{
 		$result = $this->execute('showAutowiredClass testService', [
-			'working-dir' => 'tests/01',
+			'working-dir' => '01',
 			'config' => 'configAutowireFail.neon',
 		]);
 		$this->assertEquals(255, $result['code']);

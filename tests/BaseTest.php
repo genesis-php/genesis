@@ -24,7 +24,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
 	protected function execute($command, array $options = [])
 	{
 		$opts = [
-			'--working-dir' => 'tests/01',
+			'--working-dir' => '01',
 		];
 		if (isset($options['working-dir'])) {
 			$opts['--working-dir'] = $options['working-dir'];

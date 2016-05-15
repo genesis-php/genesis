@@ -13,7 +13,7 @@ install:
 before_script:
   - "ls -la"
 
-script: vendor/bin/phpunit
+script: cd tests && ../vendor/bin/phpunit .
 
 #after_script:
 #  - composer require scrutinizer/ocular "~1.0"
