@@ -141,7 +141,7 @@ class Filesystem extends Command
 						$this->log("File '$destination' already exists, skipping ...");
 						continue;
 					}elseif($options['onDuplicate'] == self::REWRITE){
-						@unlink($destination);
+						$command->delete($destination);
 					}
 				}
 				$command->copy($options['source'], $destination);

@@ -48,7 +48,7 @@ class Build implements IBuild
 		$tasks = [];
 		$classReflection = new \ReflectionClass($this);
 		foreach ($classReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-			if (preg_match('#^run(.*)#', $method->getName(), $match)) {
+			if (preg_match('#^run(.*)#', $method->name, $match)) {
 				$doc = $method->getDocComment();
 				$section = NULL;
 				if(preg_match('#@section ?([^\s]*)\s#s', $doc, $m)){

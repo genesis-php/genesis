@@ -12,7 +12,7 @@ use Genesis\Commands\Exec;
 class PackageInstaller extends Command
 {
 
-	private $directory = [];
+	private $directory;
 
 	private $options;
 

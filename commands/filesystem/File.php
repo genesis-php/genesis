@@ -44,6 +44,18 @@ class File extends Command
 	}
 
 
+	public function delete($file)
+	{
+		if (!is_file($file)) {
+			return;
+		}
+		$result = @unlink($file);
+		if(!$result){
+			$this->error("Cannot delete file '$file'.");
+		}
+	}
+
+
 	public function makeExecutable($file)
 	{
 		exec('chmod +x ' . escapeshellarg($file), $output, $result); // native PHP chmod cannot work

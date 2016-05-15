@@ -38,6 +38,27 @@ class CommandsTest extends BaseTest
 		ob_end_clean();
 	}
 
+	/**
+	 * @expectedException \InvalidArgumentException
+	 * @expectedExceptionMessage Git executable cannot be empty.
+	 */
+	public function testGitExecutableFail()
+	{
+		$git = new Commands\Git();
+		$git->setGitExecutable(NULL);
+		$this->assertSame(NULL, $git->getGitExecutable());
+	}
+
+
+	public function testGit()
+	{
+		$git = new Commands\Git();
+		$git->setGitExecutable('git');
+		$this->assertSame('git', $git->getGitExecutable());
+		$git->setCommand('clone abc');
+		$this->assertSame('clone abc', $git->getCommand());
+	}
+
 
 	public function testGitExecute()
 	{
@@ -100,10 +121,13 @@ class CommandsTest extends BaseTest
 		ob_start();
 		$command = new Commands\PhpUnit();
 		$command->setWorkingDir($workingDir);
+		$this->assertSame($workingDir, $command->getWorkingDir());
 		$command->setTarget($workingDir);
-		$command->setOptions([
+		$options = [
 			'executable' => '../../vendor/bin/phpunit',
-		]);
+		];
+		$command->setOptions($options);
+		$this->assertSame($options, $command->getOptions());
 		$command->execute();
 		$this->assertNotContains('Error', ob_get_clean());
 	}
@@ -112,17 +136,38 @@ class CommandsTest extends BaseTest
 	public function testSelfInit()
 	{
 		$dir = __DIR__ . '/03/output';
+		$distDirectory = __DIR__ . '/../build-dist';
 		$command = new Commands\Filesystem\Directory();
 		$command->clean($dir);
 
 		$selfInit = new Commands\SelfInit();
-		$selfInit->setDistDirectory(__DIR__ . '/../build-dist');
+		$selfInit->setDistDirectory($distDirectory);
+		$this->assertSame($distDirectory, $selfInit->getDistDirectory());
 		$selfInit->setWorkingDirectory($dir);
+		$this->assertSame($dir, $selfInit->getWorkingDirectory());
+		$selfInit->setDirname('myBuildDir');
+		$this->assertSame('myBuildDir', $selfInit->getDirname());
 		ob_start();
 		$selfInit->execute();
 		ob_end_clean();
-		$res = glob($dir . "/build/*");
+		$res = glob($dir . "/myBuildDir/*");
 		$this->assertCount(4, $res);
+	}
+
+
+	/**
+	 * @expectedException \ErrorException
+	 * @expectedExceptionMessageRegExp /Directory 'build-dist' in working directory '[A-Za-z0-9\/\._-]+' already exists\./
+	 */
+	public function testSelfInitError()
+	{
+		$distDirectory = __DIR__ . '/../build-dist';
+		$workingDirectory = __DIR__ . '/../';
+		$selfInit = new Commands\SelfInit();
+		$selfInit->setDistDirectory($distDirectory);
+		$selfInit->setWorkingDirectory($workingDirectory);
+		$selfInit->setDirname('build-dist');
+		$selfInit->execute();
 	}
 
 
@@ -165,6 +210,10 @@ class CommandsTest extends BaseTest
 		ob_end_clean();
 		$this->assertFileExists($dir . '/sym-rel-testfile.json');
 		$this->assertTrue(is_link($dir . '/sym-rel-testfile.json'));
+
+		$command = new Commands\Filesystem\File();
+		$command->delete($dir . '/testfile.json');
+		$this->assertFileNotExists($dir . '/testfile.json');
 
 		$command = new Commands\Filesystem\Directory();
 		$command->clean($dir);
@@ -233,7 +282,10 @@ class CommandsTest extends BaseTest
 
 		ob_start();
 		$command = new Commands\Assets\Gulp();
+		$command->setGulpfile('gulpfile.js');
+		$this->assertSame('gulpfile.js', $command->getGulpfile());
 		$command->setDirectory($outputDir);
+		$this->assertSame($outputDir, $command->getDirectory());
 		$command->execute('test');
 		$contents = ob_get_clean();
 		$this->assertContains("Starting 'test'", $contents);
@@ -241,9 +293,15 @@ class CommandsTest extends BaseTest
 
 		ob_start();
 		$command = new Commands\Assets\Less();
-		$command->setFiles([
+		$command->setExecutable('lessc');
+		$this->assertSame('lessc', $command->getExecutable());
+		$files = [
 			$outputDir . '/test.less' => $outputDir . '/test.css',
-		]);
+		];
+		$command->setFiles($files);
+		$this->assertSame($files, $command->getFiles());
+		$command->setOptions([]);
+		$this->assertSame([], $command->getOptions());
 		$command->execute();
 		ob_end_clean();
 		$this->assertFileExists($outputDir . '/test.css');

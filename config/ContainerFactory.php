@@ -70,7 +70,7 @@ class ContainerFactory
 				'workingDirectory' => $this->workingDirectory,
 			]
 		];
-		if($this->containersToMerge){
+		if($this->containersToMerge !== NULL){
 			foreach ($this->containersToMerge as $containerToMerge) {
 				foreach ($containerToMerge->getParameters() as $k => $v) {
 					$config['parameters'][$k] = $v;

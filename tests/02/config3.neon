@@ -1,0 +1,7 @@
+class: MyTest\NonExistingClass2
+
+services:
+	myservice:
+		class: Datetime('+ 1 day')
+		setup:
+			- setNonExistingSetter('abc')

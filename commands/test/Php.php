@@ -38,7 +38,7 @@ class Php extends Command
 
 	public function execute()
 	{
-		$this->errors = NULL;
+		$this->errors = [];
 
 		if (isset($this->settings['settings'])) {
 			$this->testSettings($this->settings['settings']);

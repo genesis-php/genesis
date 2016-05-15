@@ -85,7 +85,10 @@ class PhpUnit extends Command
 		$cmd .= escapeshellarg($this->target) . ' ';
 
 		$currdir = getcwd();
-		@chdir($this->workingDir);
+		$result = @chdir($this->workingDir);
+		if(!$result){
+			$this->error("Cannot change working directory to '$this->workingDir'.");
+		}
 
 		$command = new Exec();
 		$command->setCommand($cmd);
@@ -94,7 +97,10 @@ class PhpUnit extends Command
 			$this->error(sprintf('Tests failed with code %d.', $result->getResult()));
 		}
 
-		@chdir($currdir);
+		$result = @chdir($currdir);
+		if(!$result){
+			$this->error("Cannot change working directory back to '$currdir'.");
+		}
 	}
 
 }

@@ -10,18 +10,18 @@ namespace Genesis\Commands;
 class ExecResult
 {
 
-	/** @var string */
+	/** @var int */
 	private $result;
 
-	/** @var string */
+	/** @var array|NULL */
 	private $output;
 
 
 	/**
-	 * @param string $result
-	 * @param string $output
+	 * @param int $result
+	 * @param array|NULL $output
 	 */
-	public function __construct($result, $output = NULL)
+	public function __construct($result, array $output = NULL)
 	{
 		$this->result = $result;
 		$this->output = $output;
@@ -29,7 +29,7 @@ class ExecResult
 
 
 	/**
-	 * @return string
+	 * @return int
 	 */
 	public function getResult()
 	{
@@ -38,7 +38,7 @@ class ExecResult
 
 
 	/**
-	 * @return string
+	 * @return array|NULL
 	 */
 	public function getOutput()
 	{

@@ -93,13 +93,13 @@ class Container implements \IteratorAggregate
 
 	public function &__get($name)
 	{
-		throw new \RuntimeException("Direct getting is not supported. Use setParameter() instead.");
+		throw new \RuntimeException("Direct getting is not supported. Use setParameter('$name') instead.");
 	}
 
 
 	public function __set($name, $value)
 	{
-		throw new \RuntimeException("Direct setting is not supported. Use setParameter() instead.");
+		throw new \RuntimeException("Direct setting is not supported. Use setParameter('$name', ...) instead.");
 	}
 
 }

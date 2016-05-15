@@ -132,10 +132,63 @@ class ContainerTest extends BaseTest
 		];
 		$this->assertTrue($array === $container->getParameter('doNotMergeMeRecursive'), 'Array doNotMergeMeRecursive is not the same: ' . print_r($container->getParameter('doNotMergeMeRecursive'), TRUE));
 		$this->assertEquals('includedVal', $container->getParameter('includedKey'));
-		$this->assertInstanceOf('DateTime', $container->getService('myservice'));
-		$this->assertEquals(date('Y-m-d', strtotime('+ 1 day')), $container->getService('myservice')->format('Y-m-d'));
+
 		// nested variables
 		$this->assertEquals('val', $container->getParameter('nestedValue'));
+	}
+
+
+	public function testServices()
+	{
+		$workingDir = __DIR__ . '/02';
+		$factory = new ContainerFactory();
+		$factory->setWorkingDirectory($workingDir);
+		$factory->addConfig(__DIR__ . '/02/config.neon');
+		$factory->addConfig(__DIR__ . '/02/config2.neon');
+		$cont = new Container();
+		$cont->addService('myService', new \StdClass);
+		$cont->setParameter('myContainerKey', 'myContainerValue');
+		$factory->addContainerToMerge($cont);
+		$container = $factory->create();
+
+		$this->assertTrue($container->hasService('myservice'));
+		$this->assertFalse($container->hasService('myArrayWhichDoesNotExists'));
+		$this->assertInstanceOf('DateTime', $container->getService('myservice'));
+		$this->assertEquals(date('Y-m-d', strtotime('+ 1 day')), $container->getService('myservice')->format('Y-m-d'));
+	}
+
+
+	/**
+	 * @expectedException \Exception
+	 */
+	public function testGetParameterFail()
+	{
+		$container = new Container();
+		$container->getParameter('unknown');
+	}
+
+
+	/**
+	 * @expectedException \Exception
+	 */
+	public function testGetServiceFail()
+	{
+		$container = new Container();
+		$container->getService('unknown');
+	}
+
+
+	/**
+	 * @expectedException \RuntimeException
+	 * @expectedExceptionMessage Class Datetime does not have method setNonExistingSetter()
+	 */
+	public function testNonExistingSetupMethod()
+	{
+		$workingDir = __DIR__ . '/02';
+		$factory = new ContainerFactory();
+		$factory->setWorkingDirectory($workingDir);
+		$factory->addConfig(__DIR__ . '/02/config3.neon');
+		$factory->create();
 	}
 
 
