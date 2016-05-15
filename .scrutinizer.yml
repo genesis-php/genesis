@@ -1,0 +1,16 @@
+build:
+    environment:
+        php: '5.5.25'
+    tests:
+        before:
+            - "curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -"
+            - "sudo apt-get install -y nodejs"
+            - "sudo npm install -g less" # doesnt work without sudo
+            - "sudo npm install -g gulp-cli" # doesnt work without sudo
+            - "composer install"
+        override:
+            -
+                command: 'cd tests && ../vendor/bin/phpunit  --coverage-clover=clover.xml .'
+                coverage:
+                    file: tests/clover.xml
+                    format: clover

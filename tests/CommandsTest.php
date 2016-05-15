@@ -102,7 +102,7 @@ class CommandsTest extends BaseTest
 		$command->setWorkingDir($workingDir);
 		$command->setTarget($workingDir);
 		$command->setOptions([
-			'executable' => 'phpunit',
+			'executable' => '../../vendor/bin/phpunit',
 		]);
 		$command->execute();
 		$this->assertNotContains('Error', ob_get_clean());

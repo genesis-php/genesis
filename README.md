@@ -1,6 +1,8 @@
 [Genesis](https://github.com/genesis-php/genesis)
 ===================================
 [![Build Status](https://travis-ci.org/genesis-php/genesis.svg?branch=master)](https://travis-ci.org/genesis-php/genesis)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/genesis-php/genesis/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/genesis-php/genesis/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/genesis-php/genesis/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/genesis-php/genesis/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/genesis-php/genesis/v/stable)](https://packagist.org/packages/genesis-php/genesis)
 [![License](https://poser.pugx.org/genesis-php/genesis/license.png)](https://github.com/genesis-php/genesis/blob/master/LICENSE)
 
