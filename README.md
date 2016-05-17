@@ -30,7 +30,7 @@ Getting started
 Initialize build directory in your project:
 (path to your vendor directory may differ!)<br>
 <code>
-../vendor/genesis-php/genesis/genesis <b>self-init</b>
+../vendor/bin/genesis <b>self-init</b>
 </code>
 
 
@@ -66,7 +66,7 @@ This tool is intended to use via CLI only.
 
 Run it by (path to your vendor directory may differ!):<br>
 <code>
-../vendor/genesis-php/genesis/genesis <b>mytask</b>
+../vendor/bin/genesis <b>mytask</b>
 </code>
 
 OR via shortcut, which creates self-init (you may need to edit path to vendor dir in file 'build/build'):<br>
@@ -84,7 +84,7 @@ Supported options:
 All arguments are passed to build:
 
 <code>
-../vendor/genesis-php/genesis/genesis <b>mytask</b> <b>foo</b>
+../vendor/bin/genesis <b>mytask</b> <b>foo</b>
 </code>
 
 
