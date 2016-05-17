@@ -3,6 +3,8 @@
 
 namespace Genesis;
 
+require_once __DIR__ . '/exceptions.php';
+
 
 /**
  * @author Adam Bisek (adam.bisek@gmail.com)

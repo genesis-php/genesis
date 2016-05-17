@@ -4,6 +4,9 @@
 namespace Genesis\Config;
 
 
+use Genesis\ContainerFactoryException;
+use Genesis\Exception;
+use Genesis\NotSupportedException;
 use Nette\Neon\Decoder;
 
 
@@ -60,10 +63,10 @@ class ContainerFactory
 	public function create()
 	{
 		if (!class_exists('Nette\Neon\Decoder', TRUE)) {
-			throw new \RuntimeException("Neon is not loaded.");
+			throw new Exception("Neon is not loaded.");
 		}
 		if (empty($this->configs)) {
-			throw new \RuntimeException("No config added.");
+			throw new ContainerFactoryException("No config added.");
 		}
 		$config = [
 			'parameters' => [
@@ -88,7 +91,7 @@ class ContainerFactory
 		$mainSections = ['includes', 'class', 'parameters', 'services'];
 		foreach($config as $key => $val){
 			if(!in_array($key, $mainSections)) {
-				throw new \RuntimeException("Since version 2.0 are supported main only these sections: " . implode(", ", $mainSections) . ". Section '$key' found. Move your variables into parameters section.");
+				throw new NotSupportedException("Since version 2.0 are supported main only these sections: " . implode(", ", $mainSections) . ". Section '$key' found. Move your variables into parameters section.");
 			}
 		}
 
@@ -114,7 +117,7 @@ class ContainerFactory
 				if(isset($config['setup'])){
 					foreach($config['setup'] as $neonEntity){
 						if(!method_exists($service, $neonEntity->value)){
-							throw new \RuntimeException("Class $class does not have method $neonEntity->value().");
+							throw new ContainerFactoryException("Class $class does not have method $neonEntity->value().");
 						}
 						call_user_func_array(array($service, $neonEntity->value), $neonEntity->attributes);
 					}
@@ -161,10 +164,10 @@ class ContainerFactory
 	{
 		$neonDecoder = new Decoder;
 		if (!is_file($file)) {
-			throw new \RuntimeException("Config file '$file' not found.");
+			throw new ContainerFactoryException("Config file '$file' not found.");
 		}
 		if (!is_readable($file)) {
-			throw new \RuntimeException("Config file '$file' not readable.");
+			throw new ContainerFactoryException("Config file '$file' not readable.");
 		}
 		return $neonDecoder->decode(file_get_contents($file));
 	}
@@ -214,13 +217,13 @@ class ContainerFactory
 				$parameter = $config['parameters'];
 				foreach(explode(".", $match) as $m){
 					if (!array_key_exists($m, $parameter)) {
-						throw new \RuntimeException("Cannot find variable '$match', part '$m'.");
+						throw new ContainerFactoryException("Cannot find variable '$match', part '$m'.");
 					}
 					$parameter = $parameter[$m];
 				}
 				if(is_array($parameter)){
 					if("%$match%" !== $value){ // if is variable value an array, must not be part of a string
-						throw new \RuntimeException("Array value cannot be part of a string.");
+						throw new ContainerFactoryException("Array value cannot be part of a string.");
 					}
 					return $parameter;
 				}

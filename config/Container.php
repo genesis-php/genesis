@@ -4,6 +4,9 @@
 namespace Genesis\Config;
 
 
+use Genesis\MemberAccessException;
+
+
 /**
  * @author Adam Bisek <adam.bisek@gmail.com>
  */
@@ -34,7 +37,7 @@ class Container implements \IteratorAggregate
 	public function getParameter($name)
 	{
 		if (!array_key_exists($name, $this->parameters)) {
-			throw new \Exception("Config key '$name' does not exists.");
+			throw new MemberAccessException("Config key '$name' does not exists.");
 		}
 		return $this->parameters[$name];
 	}
@@ -67,7 +70,7 @@ class Container implements \IteratorAggregate
 	public function getService($name)
 	{
 		if (!isset($this->services[$name])) {
-			throw new \Exception("Service '$name' does not exists.");
+			throw new MemberAccessException("Service '$name' does not exists.");
 		}
 		return $this->services[$name];
 	}
@@ -93,13 +96,13 @@ class Container implements \IteratorAggregate
 
 	public function &__get($name)
 	{
-		throw new \RuntimeException("Direct getting is not supported. Use setParameter('$name') instead.");
+		throw new MemberAccessException("Direct getting is not supported. Use setParameter('$name') instead.");
 	}
 
 
 	public function __set($name, $value)
 	{
-		throw new \RuntimeException("Direct setting is not supported. Use setParameter('$name', ...) instead.");
+		throw new MemberAccessException("Direct setting is not supported. Use setParameter('$name', ...) instead.");
 	}
 
 }

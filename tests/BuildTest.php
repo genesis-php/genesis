@@ -41,7 +41,7 @@ class BuildTest extends BaseTest
 
 
 	/**
-	 * @expectedException \ErrorException
+	 * @expectedException \Genesis\ErrorException
 	 * @expectedExceptionMessage This is error
 	 * @expectedExceptionCode NULL
 	 */

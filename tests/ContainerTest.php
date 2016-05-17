@@ -40,7 +40,7 @@ class ContainerTest extends BaseTest
 
 
 	/**
-	 * @expectedException \RuntimeException
+	 * @expectedException \Genesis\MemberAccessException
 	 * @expectedExceptionMessage Direct getting is not supported
 	 */
 	public function testOverloadedGet()
@@ -51,7 +51,7 @@ class ContainerTest extends BaseTest
 
 
 	/**
-	 * @expectedException \RuntimeException
+	 * @expectedException \Genesis\MemberAccessException
 	 * @expectedExceptionMessage Direct setting is not supported
 	 */
 	public function testOverloadedSet()
@@ -62,7 +62,7 @@ class ContainerTest extends BaseTest
 
 
 	/**
-	 * @expectedException \RuntimeException
+	 * @expectedException \Genesis\ContainerFactoryException
 	 * @expectedExceptionMessage No config added
 	 * @expectedExceptionCode NULL
 	 */
@@ -75,7 +75,7 @@ class ContainerTest extends BaseTest
 
 
 	/**
-	 * @expectedException \RuntimeException
+	 * @expectedException \Genesis\ContainerFactoryException
 	 * @expectedExceptionMessage not found
 	 * @expectedExceptionCode NULL
 	 */
@@ -159,7 +159,7 @@ class ContainerTest extends BaseTest
 
 
 	/**
-	 * @expectedException \Exception
+	 * @expectedException \Genesis\MemberAccessException
 	 */
 	public function testGetParameterFail()
 	{
@@ -169,7 +169,7 @@ class ContainerTest extends BaseTest
 
 
 	/**
-	 * @expectedException \Exception
+	 * @expectedException \Genesis\MemberAccessException
 	 */
 	public function testGetServiceFail()
 	{
@@ -179,7 +179,7 @@ class ContainerTest extends BaseTest
 
 
 	/**
-	 * @expectedException \RuntimeException
+	 * @expectedException \Genesis\ContainerFactoryException
 	 * @expectedExceptionMessage Class Datetime does not have method setNonExistingSetter()
 	 */
 	public function testNonExistingSetupMethod()
@@ -193,7 +193,7 @@ class ContainerTest extends BaseTest
 
 
 	/**
-	 * @expectedException \RuntimeException
+	 * @expectedException \Genesis\NotSupportedException
 	 * @expectedExceptionMessage Since version 2.0 are supported main only these sections
 	 */
 	public function testOld1xConfig()

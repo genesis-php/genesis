@@ -67,7 +67,7 @@ class Build implements IBuild
 
 	protected function error($message)
 	{
-		throw new \ErrorException($message);
+		throw new ErrorException($message);
 	}
 
 

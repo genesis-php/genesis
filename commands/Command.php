@@ -4,6 +4,7 @@ namespace Genesis\Commands;
 
 
 use Genesis\Cli;
+use Genesis\ErrorException;
 
 
 /**
@@ -24,7 +25,7 @@ abstract class Command
 
 	protected function error($message)
 	{
-		throw new \ErrorException($message);
+		throw new ErrorException($message);
 	}
 
 

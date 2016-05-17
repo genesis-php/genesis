@@ -67,7 +67,7 @@ class Bootstrap
 		try {
 			$container = $this->createContainer($workingDir, $configFile, $container);
 			$build = $this->createBuild($container, $arguments);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->log("Exited with ERROR:", 'red');
 			$this->log($e->getMessage(), 'red');
 			echo $e->getTraceAsString() . PHP_EOL;
@@ -87,7 +87,7 @@ class Bootstrap
 		$this->log("Running [$arguments[0]]", 'green');
 		try {
 			$build->$method();
-		} catch (\Exception $e) {
+		} catch (\Exception $e) { // fault barrier -> catch all
 			$this->log("Exited with ERROR:", 'red');
 			$this->log($e->getMessage(), 'red');
 			echo $e->getTraceAsString() . PHP_EOL;
@@ -140,7 +140,7 @@ class Bootstrap
 		}
 		$build = new $class($container, $arguments);
 		if (!($build instanceof IBuild)) {
-			throw new \RuntimeException("Instance of build does not implements interface IBuild.");
+			throw new Exception("Instance of build does not implements interface IBuild.");
 		}
 		$this->autowire($build, $container);
 		$build->setup();
@@ -152,7 +152,7 @@ class Bootstrap
 	{
 		foreach ($this->getAutowiredProperties($build) as $property => $service) {
 			if(!$container->hasService($service)){
-				throw new \RuntimeException("Cannot found service '$service' to inject into " . get_class($build) . "::$property.");
+				throw new Exception("Cannot found service '$service' to inject into " . get_class($build) . "::$property.");
 			}
 			$build->$property = $container->getService($service);
 		}

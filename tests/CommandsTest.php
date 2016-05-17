@@ -5,6 +5,7 @@ namespace Genesis\Tests;
 
 
 use Genesis\Commands;
+use Genesis\ErrorException;
 
 /**
  * @author Adam Bisek <adam.bisek@gmail.com>
@@ -39,7 +40,7 @@ class CommandsTest extends BaseTest
 	}
 
 	/**
-	 * @expectedException \InvalidArgumentException
+	 * @expectedException \Genesis\InvalidArgumentException
 	 * @expectedExceptionMessage Git executable cannot be empty.
 	 */
 	public function testGitExecutableFail()
@@ -156,7 +157,7 @@ class CommandsTest extends BaseTest
 
 
 	/**
-	 * @expectedException \ErrorException
+	 * @expectedException \Genesis\ErrorException
 	 * @expectedExceptionMessageRegExp /Directory 'build-dist' in working directory '[A-Za-z0-9\/\._-]+' already exists\./
 	 */
 	public function testSelfInitError()
@@ -314,7 +315,7 @@ class CommandsTest extends BaseTest
 	/** Tests */
 
 	/**
-	 * @expectedException \ErrorException
+	 * @expectedException \Genesis\ErrorException
 	 * @expectedExceptionMessage Required program "phppp" is not installed
 	 * @expectedExceptionCode NULL
 	 */
@@ -357,7 +358,7 @@ class CommandsTest extends BaseTest
 
 
 	/**
-	 * @expectedException \ErrorException
+	 * @expectedException \Genesis\ErrorException
 	 * @expectedExceptionMessage Node.JS is not current. Version v299.10.10 required, but
 	 * @expectedExceptionCode NULL
 	 */
@@ -368,7 +369,7 @@ class CommandsTest extends BaseTest
 			$command = new Commands\Test\NodeJs();
 			$command->setRequiredVersion('v299.10.10');
 			$command->execute();
-		} catch (\Exception $e) {
+		} catch (ErrorException $e) {
 			ob_end_clean();
 			throw $e;
 		}

@@ -4,6 +4,9 @@
 namespace Genesis\Commands;
 
 
+use Genesis\InvalidArgumentException;
+
+
 /**
  * @author Adam Bisek <adam.bisek@gmail.com>
  */
@@ -31,7 +34,7 @@ class Git extends Command
 	public function setGitExecutable($gitExecutable)
 	{
 		if ($gitExecutable == '') {
-			throw new \InvalidArgumentException("Git executable cannot be empty.");
+			throw new InvalidArgumentException("Git executable cannot be empty.");
 		}
 		$this->gitExecutable = $gitExecutable;
 	}
