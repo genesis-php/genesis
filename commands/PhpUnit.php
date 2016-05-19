@@ -78,6 +78,12 @@ class PhpUnit extends Command
 		}
 
 		$cmd = escapeshellarg($this->options['executable']) . ' ';
+		if (isset($this->options['xdebugExtensionFile'])) {
+			if(!is_file($this->options['xdebugExtensionFile'])){ // PHP is quite when extension file does not exists
+				$this->error("Xdebug extension file '{$this->options['xdebugExtensionFile']}' does not exists.");
+			}
+			$cmd .= '-d zend_extension=' . escapeshellarg($this->options['xdebugExtensionFile']) . ' ';
+		}
 		if (isset($this->options['configFile'])) {
 			$cmd .= '--configuration ';
 			$cmd .= escapeshellarg($this->options['configFile']) . ' ';
