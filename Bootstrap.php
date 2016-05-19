@@ -37,7 +37,7 @@ class Bootstrap
 		}
 
 		$arguments = $inputArgs->getArguments();
-		if(isset($arguments[0]) && $arguments[0] === 'self-init'){
+		if (isset($arguments[0]) && $arguments[0] === 'self-init') {
 			$directoryName = isset($arguments[1]) ? $arguments[1] : 'build';
 			$selfInit = new Commands\SelfInit();
 			$selfInit->setDistDirectory(__DIR__ . '/build-dist');
@@ -52,9 +52,9 @@ class Bootstrap
 		if (is_file($bootstrapFile)) {
 			$this->log("Info: Found bootstrap.php in working directory.", 'dark_gray');
 			$container = require_once $bootstrapFile;
-			if($container === 1 || $container === TRUE){ // 1 = success, TRUE = already required
+			if ($container === 1 || $container === TRUE) { // 1 = success, TRUE = already required
 				$container = NULL;
-			}elseif(!($container instanceof Container)){
+			}elseif (!($container instanceof Container)) {
 				$this->log("Returned value from bootstrap.php must be instance of 'Genesis\\Container\\Container' or nothing (NULL).", 'red');
 				exit(255);
 			}
@@ -112,11 +112,11 @@ class Bootstrap
 	{
 		$factory = new ContainerFactory();
 		$factory->addConfig($workingDir . '/' . $configFile);
-		if(is_file($workingDir . '/config.local.neon')){
+		if (is_file($workingDir . '/config.local.neon')) {
 			$factory->addConfig($workingDir . '/config.local.neon');
 		}
 		$factory->setWorkingDirectory($workingDir);
-		if($bootstrapContainer !== NULL){
+		if ($bootstrapContainer !== NULL) {
 			$factory->addContainerToMerge($bootstrapContainer);
 		}
 		return $factory->create();
@@ -163,10 +163,10 @@ class Bootstrap
 	{
 		$return = [];
 		$reflectionClass = new \ReflectionClass($class);
-		foreach($reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $property){
+		foreach ($reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
 			$reflectionProp = new \ReflectionProperty($class, $property->getName());
 			$doc = $reflectionProp->getDocComment();
-			if(preg_match('#@inject ?([^\s]*)\s#s', $doc, $matches)){
+			if (preg_match('#@inject ?([^\s]*)\s#s', $doc, $matches)) {
 				$return[$property->getName()] = trim($matches[1]) !== '' ? $matches[1] : $property->getName();
 			}
 		}

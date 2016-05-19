@@ -63,17 +63,17 @@ class Help extends Command
 		// detect max width
 		$minColumnWidth = 30;
 		foreach ($this->sections as $sectionName => $data) {
-			if(strlen($sectionName) > $minColumnWidth){
+			if (strlen($sectionName) > $minColumnWidth) {
 				$minColumnWidth = strlen($sectionName) + 5;
 			}
 			foreach ($data['tasks'] as $taskName => $description) {
-				if(strlen($taskName) > $minColumnWidth){
+				if (strlen($taskName) > $minColumnWidth) {
 					$minColumnWidth = strlen($taskName) + 2 + 5;
 				}
 			}
 		}
 		// empty section first
-		if(isset($this->sections[''])){
+		if (isset($this->sections[''])) {
 			$val = $this->sections[''];
 			unset($this->sections['']);
 			$this->sections = ['' => $val] + $this->sections;
@@ -85,7 +85,7 @@ class Help extends Command
 		echo "Available tasks:" . PHP_EOL;
 		foreach ($this->sections as $sectionName => $data) {
 			echo Cli::getColoredString($sectionName, 'yellow');
-			echo str_repeat(" ", $minColumnWidth - strlen($sectionName) + 2);  // +2 = two spaces before taskName (below)
+			echo str_repeat(" ", $minColumnWidth - strlen($sectionName) + 2); // +2 = two spaces before taskName (below)
 			echo Cli::getColoredString($data['description'], 'dark_gray');
 			echo PHP_EOL;
 			foreach ($data['tasks'] as $taskName => $description) {

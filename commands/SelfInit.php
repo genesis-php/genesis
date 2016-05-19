@@ -75,7 +75,7 @@ class SelfInit extends Command
 	public function execute()
 	{
 		$buildDir = $this->workingDirectory . DIRECTORY_SEPARATOR . $this->dirname;
-		if(is_dir($buildDir)){
+		if (is_dir($buildDir)) {
 			$this->error("Directory '$this->dirname' in working directory '$this->workingDirectory' already exists.");
 		}
 		$directory = new Filesystem\Directory();
@@ -85,7 +85,7 @@ class SelfInit extends Command
 		foreach ($directory->read($this->distDirectory) as $fileInfo) {
 			$newFile = $buildDir . DIRECTORY_SEPARATOR . $fileInfo->getFilename();
 			$file->copy($fileInfo->getPathName(), $newFile);
-			if($fileInfo->getFilename() === 'build'){
+			if ($fileInfo->getFilename() === 'build') {
 				$file->makeExecutable($newFile);
 			}
 		}

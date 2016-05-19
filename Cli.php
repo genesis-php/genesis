@@ -25,10 +25,10 @@ class Cli
 
 	public static function getColoredString($string, $foreground = NULL, $background = NULL)
 	{
-		if(!self::$enableColors){
+		if (!self::$enableColors) {
 			return $string;
 		}
-		if($foreground === NULL && $background === NULL){
+		if ($foreground === NULL && $background === NULL) {
 			return $string;
 		}
 

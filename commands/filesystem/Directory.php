@@ -27,19 +27,19 @@ class Directory extends Command
 			if ($file->isLink()) {
 				$this->checkPath($file->getPathName(), $directory);
 				$result = @unlink($file->getPathname());
-				if(!$result){
+				if (!$result) {
 					$this->error("Cannot delete symlink '$file'.");
 				}
 			} elseif ($file->isDir()) {
 				$this->checkPath($file->getPathName(), $directory);
 				$result = @rmdir($file->getPathName());
-				if(!$result){
+				if (!$result) {
 					$this->error("Cannot delete file '$file'.");
 				}
 			} elseif ($file->isFile()) {
 				$this->checkPath($file->getPathName(), $directory);
 				$result = @unlink($file->getPathname());
-				if(!$result){
+				if (!$result) {
 					$this->error("Cannot delete file '$file'.");
 				}
 			}

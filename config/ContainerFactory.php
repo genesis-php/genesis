@@ -73,7 +73,7 @@ class ContainerFactory
 				'workingDirectory' => $this->workingDirectory,
 			]
 		];
-		if($this->containersToMerge !== NULL){
+		if ($this->containersToMerge !== NULL) {
 			foreach ($this->containersToMerge as $containerToMerge) {
 				foreach ($containerToMerge->getParameters() as $k => $v) {
 					$config['parameters'][$k] = $v;
@@ -135,9 +135,9 @@ class ContainerFactory
 		$return = [];
 		foreach ($files as $file) {
 			$array = $this->readFile($file);
-			if($array !== NULL){
-				if(isset($array['includes'])){
-					foreach($array['includes'] as $include){
+			if ($array !== NULL) {
+				if (isset($array['includes'])) {
+					foreach ($array['includes'] as $include) {
 						$return[] = dirname($file) . DIRECTORY_SEPARATOR . $include;
 					}
 				}
@@ -152,7 +152,7 @@ class ContainerFactory
 	{
 		foreach ($files as $file) {
 			$array = $this->readFile($file);
-			if($array !== NULL) {
+			if ($array !== NULL) {
 				$config = array_replace_recursive($config, $array);
 			}
 		}
@@ -182,11 +182,11 @@ class ContainerFactory
 				foreach($value->attributes as $k => $v){
 					if(is_array($v)){
 						$value->attributes[$k] = $this->parseValues($v, $allConfig, array_merge($keysPath, [$key]));
-					}else{
+					} else{
 						$value->attributes[$k] = $this->parseValue($v, $allConfig);
 					}
 				}
-			}elseif (is_array($value)) {
+			} elseif (is_array($value)) {
 				$value = $this->parseValues($value, $allConfig, array_merge($keysPath, [$key]));
 			} elseif(!is_object($value)) {
 				$value = $this->parseValue($value, $allConfig);
@@ -198,11 +198,11 @@ class ContainerFactory
 			$config[$newKey] = $value;
 
 			// write to global config
-			$v =& $allConfig;
+			$v = & $allConfig;
 			foreach ($keysPath as $kp) {
-				$v =& $v[$kp];
+				$v = & $v[$kp];
 			}
-			if(!($value instanceof \Nette\Neon\Entity)) {
+			if (!($value instanceof \Nette\Neon\Entity)) {
 				$v[$newKey] = $value;
 			}
 		}
@@ -237,7 +237,7 @@ class ContainerFactory
 	private function resolveUnmergables($config)
 	{
 		foreach ($config as $key => $value) {
-			if(preg_match('#!$#', $key)){
+			if (preg_match('#!$#', $key)) {
 				$newKey = substr($key, 0, strlen($key) - 1);
 				$config[$newKey] = $value;
 				unset($config[$key]);

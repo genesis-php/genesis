@@ -79,7 +79,7 @@ class PhpUnit extends Command
 
 		$cmd = escapeshellarg($this->options['executable']) . ' ';
 		if (isset($this->options['xdebugExtensionFile'])) {
-			if(!is_file($this->options['xdebugExtensionFile'])){ // PHP is quite when extension file does not exists
+			if (!is_file($this->options['xdebugExtensionFile'])) { // PHP is quite when extension file does not exists
 				$this->error("Xdebug extension file '{$this->options['xdebugExtensionFile']}' does not exists.");
 			}
 			$cmd .= '-d zend_extension=' . escapeshellarg($this->options['xdebugExtensionFile']) . ' ';
@@ -92,7 +92,7 @@ class PhpUnit extends Command
 
 		$currdir = getcwd();
 		$result = @chdir($this->workingDir);
-		if(!$result){
+		if (!$result) {
 			$this->error("Cannot change working directory to '$this->workingDir'.");
 		}
 
@@ -104,7 +104,7 @@ class PhpUnit extends Command
 		}
 
 		$result = @chdir($currdir);
-		if(!$result){
+		if (!$result) {
 			$this->error("Cannot change working directory back to '$currdir'.");
 		}
 	}

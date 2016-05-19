@@ -27,7 +27,7 @@ class Symlink extends Command
 	 */
 	public function createRelative($directory, $target, $link)
 	{
-		if(!is_dir($directory)){
+		if (!is_dir($directory)) {
 			$this->error("Directory '$directory' not found.");
 		}
 		$cmd = 'cd ' . escapeshellarg($directory) . ' && ln -s  ' . escapeshellarg($target) . ' ' . escapeshellarg($link);

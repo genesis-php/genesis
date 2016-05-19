@@ -78,7 +78,7 @@ class Filesystem extends Command
 	 */
 	public function addSymlinksRelativeToCreate(array $symlinksRelativeToCreate, $baseDir)
 	{
-		if(!isset($this->symlinksRelativeToCreate[$baseDir])){
+		if (!isset($this->symlinksRelativeToCreate[$baseDir])) {
 			$this->symlinksRelativeToCreate[$baseDir] = [];
 		}
 		$this->symlinksRelativeToCreate[$baseDir] = array_merge($this->symlinksRelativeToCreate[$baseDir], $symlinksRelativeToCreate);
@@ -110,7 +110,7 @@ class Filesystem extends Command
 
 	public function execute()
 	{
-		if(count($this->directoriesToCreate) > 0) {
+		if (count($this->directoriesToCreate) > 0) {
 			$this->log(Cli::getColoredString('Creating directories', 'light_blue'));
 			$command = new Directory();
 			foreach ($this->directoriesToCreate as $directory => $chmod) {
@@ -122,7 +122,7 @@ class Filesystem extends Command
 				$this->log("Directory '$directory' created.");
 			}
 		}
-		if(count($this->directoriesToClean) > 0) {
+		if (count($this->directoriesToClean) > 0) {
 			$this->log(Cli::getColoredString('Cleaning directories', 'light_blue'));
 			$command = new Directory();
 			foreach ($this->directoriesToClean as $directory) {
@@ -148,11 +148,11 @@ class Filesystem extends Command
 				$this->log("File '$options[source]' copied to '$destination'.");
 			}
 		}
-		if(count($this->symlinksRelativeToCreate) > 0) {
+		if (count($this->symlinksRelativeToCreate) > 0) {
 			$this->log(Cli::getColoredString('Creating symlinks', 'light_blue'));
 			$command = new \Genesis\Commands\Filesystem\Symlink();
-			foreach($this->symlinksRelativeToCreate as $baseDir => $symlinks){
-				foreach($symlinks as $link => $target) {
+			foreach ($this->symlinksRelativeToCreate as $baseDir => $symlinks) {
+				foreach ($symlinks as $link => $target) {
 					$absoluteLinkPath = $baseDir . '/' . $link;
 					if (is_link($absoluteLinkPath)) {
 						$this->log("Symlink '$link' already exists, skipping ...");

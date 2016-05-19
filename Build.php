@@ -34,7 +34,7 @@ class Build implements IBuild
 	{
 		$helpCommand = new Commands\Help;
 		foreach ($this->detectAvailableTasks() as $section => $tasks) {
-			if(!$helpCommand->hasSection($section)){
+			if (!$helpCommand->hasSection($section)) {
 				$helpCommand->addSection($section);
 			}
 			$helpCommand->setSectionTasks($section, $tasks);
@@ -51,11 +51,11 @@ class Build implements IBuild
 			if (preg_match('#^run(.*)#', $method->name, $match)) {
 				$doc = $method->getDocComment();
 				$section = NULL;
-				if(preg_match('#@section ?([^\s]*)\s#s', $doc, $m)){
+				if (preg_match('#@section ?([^\s]*)\s#s', $doc, $m)) {
 					$section = trim($m[1]);
 				}
 				$description = NULL;
-				if(preg_match('#([^@][a-zA-Z0-9]+)+#', $doc, $m)){
+				if (preg_match('#([^@][a-zA-Z0-9]+)+#', $doc, $m)) {
 					$description = trim($m[0]);
 				}
 				$tasks[$section][lcfirst($match[1])] = $description != '' ? $description : NULL;
