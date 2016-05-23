@@ -29,6 +29,7 @@ class ExecResult
 
 
 	/**
+	 * Returns exit code
 	 * @return int
 	 */
 	public function getResult()
@@ -38,6 +39,7 @@ class ExecResult
 
 
 	/**
+	 * Returns STDOUT
 	 * @return array|NULL
 	 */
 	public function getOutput()

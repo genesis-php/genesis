@@ -23,6 +23,11 @@ abstract class Command
 	];
 
 
+	/**
+	 * Trigger an error and ends execution (if not catched)
+	 * @param $message
+	 * @throws ErrorException
+	 */
 	protected function error($message)
 	{
 		throw new ErrorException($message);

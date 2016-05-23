@@ -18,7 +18,8 @@ class PhpUnit extends Command
 
 
 	/**
-	 * @return mixed
+	 * Returns working directory. System will switch to this directory before running tests
+	 * @return string
 	 */
 	public function getWorkingDir()
 	{
@@ -27,6 +28,7 @@ class PhpUnit extends Command
 
 
 	/**
+	 * Sets working directory. System will switch to this directory before running tests
 	 * @param mixed $workingDir
 	 */
 	public function setWorkingDir($workingDir)
@@ -36,6 +38,7 @@ class PhpUnit extends Command
 
 
 	/**
+	 * Returns target to be executed. Dir in working directory, dot (current dir), TestFile, etc
 	 * @return mixed
 	 */
 	public function getTarget()
@@ -45,6 +48,7 @@ class PhpUnit extends Command
 
 
 	/**
+	 * Sets target to be executed. Dir in working directory, dot (current dir), TestFile, etc
 	 * @param mixed $target
 	 */
 	public function setTarget($target)
@@ -63,6 +67,10 @@ class PhpUnit extends Command
 
 
 	/**
+	 * Possible options:
+	 * - executable (mandatory)
+	 * - xdebugExtensionFile
+	 * - configFile
 	 * @param array|NULL $options
 	 */
 	public function setOptions(array $options = NULL)

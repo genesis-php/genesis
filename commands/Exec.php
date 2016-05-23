@@ -16,6 +16,7 @@ class Exec extends Command
 
 
 	/**
+	 * Returns setted shell command
 	 * @return mixed
 	 */
 	public function getCommand()
@@ -25,6 +26,7 @@ class Exec extends Command
 
 
 	/**
+	 * Sets shell command (to be executed later)
 	 * @param mixed $command
 	 */
 	public function setCommand($command)

@@ -7,6 +7,7 @@ namespace Genesis\Commands\Assets;
 use Genesis\Commands;
 
 /**
+ * Warning: This implementation is using NodeJs lessc - you need NodeJs with globally installed lessc.
  * @author Adam Bisek <adam.bisek@gmail.com>
  */
 class Less extends Commands\Command
@@ -21,6 +22,7 @@ class Less extends Commands\Command
 
 
 	/**
+	 * Returns path to lessc executable.
 	 * @return string
 	 */
 	public function getExecutable()
@@ -30,6 +32,7 @@ class Less extends Commands\Command
 
 
 	/**
+	 * Sets path to lessc executable.
 	 * @param string $executable
 	 */
 	public function setExecutable($executable)
@@ -39,6 +42,7 @@ class Less extends Commands\Command
 
 
 	/**
+	 * Returns files to compile.
 	 * @return array
 	 */
 	public function getFiles()
@@ -48,6 +52,7 @@ class Less extends Commands\Command
 
 
 	/**
+	 * Sets files to compile.
 	 * @param array $files
 	 */
 	public function setFiles($files)

@@ -36,6 +36,7 @@ class Gulp extends Commands\Command
 
 
 	/**
+	 * Returns working directory.
 	 * @return string
 	 */
 	public function getDirectory()
@@ -45,6 +46,7 @@ class Gulp extends Commands\Command
 
 
 	/**
+	 * Sets working directory. System will switch to this directory before running gulp.
 	 * @param string $directory
 	 */
 	public function setDirectory($directory)

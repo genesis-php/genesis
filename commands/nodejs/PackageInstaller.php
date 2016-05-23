@@ -18,6 +18,7 @@ class PackageInstaller extends Command
 
 
 	/**
+	 * Gets working directory.
 	 * @return string
 	 */
 	public function getDirectory()
@@ -27,6 +28,7 @@ class PackageInstaller extends Command
 
 
 	/**
+	 * Sets working directory. System will switch to this directory before running npm.
 	 * @param string $directory
 	 */
 	public function setDirectory($directory)

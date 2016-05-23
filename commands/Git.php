@@ -20,6 +20,7 @@ class Git extends Command
 
 
 	/**
+	 * Returns path to git executable
 	 * @return string
 	 */
 	public function getGitExecutable()
@@ -29,6 +30,7 @@ class Git extends Command
 
 
 	/**
+	 * Sets path to git executable
 	 * @param string $gitExecutable
 	 */
 	public function setGitExecutable($gitExecutable)
@@ -41,6 +43,7 @@ class Git extends Command
 
 
 	/**
+	 * Return setted git command
 	 * @return mixed
 	 */
 	public function getCommand()
@@ -50,6 +53,7 @@ class Git extends Command
 
 
 	/**
+	 * Sets git command (to be executed later)
 	 * @param mixed $command
 	 */
 	public function setCommand($command)
@@ -58,6 +62,9 @@ class Git extends Command
 	}
 
 
+	/**
+	 * Sets git command for cloning repository (to be executed later)
+	 */
 	public function cloneRepo($url, $branch = NULL, $dir = NULL)
 	{
 		$command = escapeshellarg($this->gitExecutable) . " clone";
