@@ -3,9 +3,6 @@
 
 namespace Genesis\Tests;
 
-
-use Tester;
-
 /**
  * @author Adam Bisek <adam.bisek@gmail.com>
  */
