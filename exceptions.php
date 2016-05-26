@@ -4,6 +4,8 @@ namespace Genesis;
 
 class Exception extends \Exception {}
 
+class TerminateException extends Exception {}
+
 class ErrorException extends Exception {}
 
 class InvalidArgumentException extends Exception {}

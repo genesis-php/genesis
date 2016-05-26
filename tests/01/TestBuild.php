@@ -78,4 +78,10 @@ class TestBuild extends Genesis\Build
 		$this->error("This is error.");
 	}
 
+
+	public function runThrowUnexpectedException()
+	{
+		throw new \RuntimeException("UnexpectedException message");
+	}
+
 }

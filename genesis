@@ -49,4 +49,8 @@ $inputArgs->setOptions($options);
 
 // run
 $bootstrap = new Genesis\Bootstrap();
-$bootstrap->run($inputArgs);
+try {
+	$bootstrap->run($inputArgs);
+}catch(Genesis\TerminateException $e){
+	exit($e->getCode());
+}

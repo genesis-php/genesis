@@ -28,12 +28,12 @@ class Bootstrap
 			$workingDir = realpath($inputArgs->getOption('working-dir'));
 			if (!$workingDir) {
 				$this->log(sprintf("Working dir '%s' does not exists.", $inputArgs->getOption('working-dir')), 'red');
-				exit(255);
+				$this->terminate(255);
 			}
 		}
 		if ($workingDir === __DIR__) {
 			$this->log(sprintf("Working dir '%s' is directory with Genesis. You have to choose directory with build.", $workingDir), 'red');
-			exit(255);
+			$this->terminate(255);
 		}
 
 		$arguments = $inputArgs->getArguments();
@@ -44,7 +44,7 @@ class Bootstrap
 			$selfInit->setWorkingDirectory($workingDir);
 			$selfInit->setDirname($directoryName);
 			$selfInit->execute();
-			exit(0);
+			$this->terminate(0);
 		}
 
 		$bootstrapFile = $this->detectBootstrapFilename($workingDir);
@@ -56,7 +56,7 @@ class Bootstrap
 				$container = NULL;
 			}elseif (!($container instanceof Container)) {
 				$this->log("Returned value from bootstrap.php must be instance of 'Genesis\\Container\\Container' or nothing (NULL).", 'red');
-				exit(255);
+				$this->terminate(255);
 			}
 		} else {
 			$this->log("Info: bootstrap.php was not found in working directory.", 'dark_gray');
@@ -71,18 +71,18 @@ class Bootstrap
 			$this->log("Exited with ERROR:", 'red');
 			$this->log($e->getMessage(), 'red');
 			echo $e->getTraceAsString() . PHP_EOL;
-			exit(255);
+			$this->terminate(255);
 		}
 		if (count($arguments) < 1) {
 			$this->log("Running default", 'green');
 			$build->runDefault();
-			exit(0);
+			$this->terminate(0);
 		}
 
 		$method = 'run' . str_replace('-', '', ucfirst($arguments[0]));
 		if (!method_exists($build, $method)) {
 			$this->log("Task '$arguments[0]' does not exists.", 'red');
-			exit(255);
+			$this->terminate(255);
 		}
 		$this->log("Running [$arguments[0]]", 'green');
 		try {
@@ -91,11 +91,17 @@ class Bootstrap
 			$this->log("Exited with ERROR:", 'red');
 			$this->log($e->getMessage(), 'red');
 			echo $e->getTraceAsString() . PHP_EOL;
-			exit(255);
+			$this->terminate(255);
 		}
 		$this->log("Exited with SUCCESS", 'black', 'green');
 		echo PHP_EOL;
-		exit(0);
+		$this->terminate(0);
+	}
+
+
+	protected function terminate($code)
+	{
+		throw new TerminateException(NULL, $code);
 	}
 
 
@@ -136,7 +142,7 @@ class Bootstrap
 				"Are you in correct working directory?" . PHP_EOL .
 				"Did you forget add bootstrap.php with class loading into working directory?" . PHP_EOL .
 				"Did you forget to load class %s?", $class, $class), 'red');
-			exit(255);
+			$this->terminate(255);
 		}
 		$build = new $class($container, $arguments);
 		if (!($build instanceof IBuild)) {
