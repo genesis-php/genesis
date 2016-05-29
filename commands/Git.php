@@ -18,6 +18,15 @@ class Git extends Command
 
 	private $command;
 
+	private $workingDirectory;
+
+	/**
+	 * Redirect stderr to stdout? - for testing purposes only
+	 * Git writes his progressive output do stderr (even if everything ok) - at least when clonning
+	 * @var bool
+	 */
+	private $redirectStderrToStdout = FALSE;
+
 
 	/**
 	 * Returns path to git executable
@@ -39,6 +48,43 @@ class Git extends Command
 			throw new InvalidArgumentException("Git executable cannot be empty.");
 		}
 		$this->gitExecutable = $gitExecutable;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getWorkingDirectory()
+	{
+		return $this->workingDirectory;
+	}
+
+
+	/**
+	 * Sets path to working directory
+	 * @param string $workingTree
+	 */
+	public function setWorkingDirectory($workingDirectory)
+	{
+		$this->workingDirectory = $workingDirectory;
+	}
+
+
+	/**
+	 * @return boolean
+	 */
+	public function isRedirectStderrToStdout()
+	{
+		return $this->redirectStderrToStdout;
+	}
+
+
+	/**
+	 * @param boolean $redirectStderrToStdout
+	 */
+	public function setRedirectStderrToStdout($redirectStderrToStdout)
+	{
+		$this->redirectStderrToStdout = $redirectStderrToStdout;
 	}
 
 
@@ -67,7 +113,7 @@ class Git extends Command
 	 */
 	public function cloneRepo($url, $branch = NULL, $dir = NULL)
 	{
-		$command = escapeshellarg($this->gitExecutable) . " clone";
+		$command = "clone";
 		$command .= " --depth 1 --recursive $url";
 		$command .= ($branch ? " --branch $branch" : '');
 		$command .= ($dir ? ' ' . escapeshellarg($dir) : '');
@@ -75,9 +121,21 @@ class Git extends Command
 	}
 
 
+	/**
+	 * @return ExecResult
+	 */
 	public function execute()
 	{
-		return $this->exec(escapeshellarg($this->gitExecutable) . ' ' . $this->command);
+		$command = '';
+		if($this->workingDirectory !== NULL){
+			$command .= 'cd ' . escapeshellarg($this->workingDirectory) . ' && ';
+		}
+		$command .= escapeshellarg($this->gitExecutable);
+		$execCommand = $command . ' ' . $this->command;
+		if($this->redirectStderrToStdout){
+			$execCommand .= ' 2>&1';
+		}
+		return $this->exec($execCommand);
 	}
 
 

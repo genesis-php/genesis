@@ -58,6 +58,10 @@ class CommandsTest extends BaseTest
 		$this->assertSame('git', $git->getGitExecutable());
 		$git->setCommand('clone abc');
 		$this->assertSame('clone abc', $git->getCommand());
+		$git->setRedirectStderrToStdout(TRUE);
+		$this->assertEquals(TRUE, $git->isRedirectStderrToStdout());
+		$git->setWorkingDirectory('/my/path');
+		$this->assertSame('/my/path', $git->getWorkingDirectory());
 	}
 
 
@@ -71,6 +75,29 @@ class CommandsTest extends BaseTest
 		$line = $output[0];
 		$this->assertContains('git version ', $line);
 		ob_end_clean();
+	}
+
+
+	public function testGitOperations()
+	{
+		$dir = __DIR__ . '/genesis-clone';
+		ob_start();
+		$git = new Commands\Git();
+		$git->setRedirectStderrToStdout(TRUE);
+		$git->setWorkingDirectory(__DIR__);
+		$git->cloneRepo('https://github.com/genesis-php/genesis.git', 'master', $dir);
+		$result = $git->execute();
+		ob_end_clean();
+
+		$output = $result->getOutput();
+		$line = $output[0];
+		$this->assertContains('Cloning into', $line);
+		$this->assertFileExists($dir); // assert directory exists
+
+		// cleanup
+		$directory = new Commands\Filesystem\Directory();
+		$directory->clean($dir);
+		rmdir($dir);
 	}
 
 
