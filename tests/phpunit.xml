@@ -6,11 +6,9 @@
 
     <filter>
         <whitelist>
-            <directory suffix=".php">../</directory>
+            <directory suffix=".php">../src</directory>
             <exclude>
-                <directory>../tests/</directory>
-                <directory>../build-dist/</directory>
-                <directory>../vendor/</directory>
+                <directory>../src/build-dist/</directory>
             </exclude>
             <directory suffix=".php">../commands</directory>
             <directory suffix=".php">../config</directory>
@@ -18,7 +16,7 @@
 
         <blacklist>
             <directory>../tests</directory>
-            <directory>../build-dist</directory>
+            <directory>../src/build-dist</directory>
             <directory>../vendor</directory>
         </blacklist>
     </filter>

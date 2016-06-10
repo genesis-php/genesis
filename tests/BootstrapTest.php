@@ -4,6 +4,7 @@
 namespace Genesis\Tests;
 
 use Genesis\Bootstrap;
+use Genesis\BuildFactory;
 use Genesis\InputArgs;
 use Genesis\TerminateException;
 
@@ -14,13 +15,24 @@ use Genesis\TerminateException;
 class BootstrapTest extends BaseTest
 {
 
+	/** @var Bootstrap */
+	private $bootstrap;
+
+
+	public function setUp()
+	{
+		parent::setUp();
+		$this->bootstrap = new Bootstrap();
+		$this->bootstrap->setBuildFactory(new BuildFactory());
+	}
+
+
 	public function testNonExistingTask()
 	{
 		$inputArgs = $this->createInputArgs(['nonExistingTask'], ['working-dir' => '01']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
@@ -32,10 +44,9 @@ class BootstrapTest extends BaseTest
 	public function testWrongBootstrapReturn()
 	{
 		$inputArgs = $this->createInputArgs(['task'], ['working-dir' => '04']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
@@ -47,10 +58,9 @@ class BootstrapTest extends BaseTest
 	public function testShowBootstrapContainer() // test, if returned Container from bootstrap is merged into Container
 	{
 		$inputArgs = $this->createInputArgs(['showContainerValue', 'myTestBootstrapKey'], ['working-dir' => '01']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
@@ -58,10 +68,9 @@ class BootstrapTest extends BaseTest
 		$this->assertEquals('"val"', $lines[2]);
 
 		$inputArgs = $this->createInputArgs(['showServiceClass', 'myService'], ['working-dir' => '01']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
@@ -73,10 +82,9 @@ class BootstrapTest extends BaseTest
 	public function testExistingTask()
 	{
 		$inputArgs = $this->createInputArgs(['info'], ['working-dir' => '01']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
@@ -89,10 +97,9 @@ class BootstrapTest extends BaseTest
 	{
 		// executes runDefault()
 		$inputArgs = $this->createInputArgs([], ['working-dir' => '01']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
@@ -104,10 +111,9 @@ class BootstrapTest extends BaseTest
 	public function testUnexpectedException()
 	{
 		$inputArgs = $this->createInputArgs(['throwUnexpectedException'], ['working-dir' => '01']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
@@ -124,10 +130,9 @@ class BootstrapTest extends BaseTest
 		$command->create($dir);
 
 		$inputArgs = $this->createInputArgs(['self-init'], ['working-dir' => 'self-init']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
@@ -143,21 +148,19 @@ class BootstrapTest extends BaseTest
 	public function testWrongWorkingDir()
 	{
 		$inputArgs = $this->createInputArgs([], ['working-dir' => 'workingDirNonExisting']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
 		$lines = explode("\n", ob_get_clean());
 		$this->assertEquals("Working dir 'workingDirNonExisting' does not exists.", $lines[0]);
 
-		$inputArgs = $this->createInputArgs([], ['working-dir' => '../']);
-		$bootstrap = new Bootstrap();
+		$inputArgs = $this->createInputArgs([], ['working-dir' => '../src']);
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
@@ -169,10 +172,9 @@ class BootstrapTest extends BaseTest
 	public function testBootstrapFound()
 	{
 		$inputArgs = $this->createInputArgs([], ['working-dir' => '01']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
@@ -184,10 +186,9 @@ class BootstrapTest extends BaseTest
 	public function testNonExistingBuild()
 	{
 		$inputArgs = $this->createInputArgs([], ['working-dir' => '02']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
@@ -199,10 +200,9 @@ class BootstrapTest extends BaseTest
 	public function testExistingBuild()
 	{
 		$inputArgs = $this->createInputArgs(['info'], ['working-dir' => '01']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
@@ -214,10 +214,9 @@ class BootstrapTest extends BaseTest
 	public function testOptionalConfigBuild()
 	{
 		$inputArgs = $this->createInputArgs(['showContainerValue', 'optionalConfigKey'], ['working-dir' => '01', 'config' => 'optionalConfig.neon']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
@@ -229,10 +228,9 @@ class BootstrapTest extends BaseTest
 	public function testAutowiring()
 	{
 		$inputArgs = $this->createInputArgs(['showAutowiredClass', 'testService'], ['working-dir' => '01', 'config' => 'config.neon']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
@@ -240,10 +238,9 @@ class BootstrapTest extends BaseTest
 		$this->assertEquals('ArrayObject', $lines[2]);
 
 		$inputArgs = $this->createInputArgs(['showAutowiredClass', 'testService2'], ['working-dir' => '01', 'config' => 'config.neon']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
@@ -255,10 +252,9 @@ class BootstrapTest extends BaseTest
 	public function testAutowiringFail()
 	{
 		$inputArgs = $this->createInputArgs(['showAutowiredClass', 'testService'], ['working-dir' => '01', 'config' => 'configAutowireFail.neon']);
-		$bootstrap = new Bootstrap();
 		ob_start();
 		try {
-			$bootstrap->run($inputArgs);
+			$this->bootstrap->run($inputArgs);
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}

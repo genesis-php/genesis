@@ -89,34 +89,34 @@ class ContainerFactory
 
 		// BC break check
 		$mainSections = ['includes', 'class', 'parameters', 'services'];
-		foreach($config as $key => $val){
-			if(!in_array($key, $mainSections)) {
+		foreach ($config as $key => $val) {
+			if (!in_array($key, $mainSections)) {
 				throw new NotSupportedException("Since version 2.0 are supported main only these sections: " . implode(", ", $mainSections) . ". Section '$key' found. Move your variables into parameters section.");
 			}
 		}
 
 		$container = new Container();
 		$container->setClass($config['class']);
-		if(isset($config['parameters'])){
+		if (isset($config['parameters'])) {
 			$container->setParameters($config['parameters']);
 		}
-		if(isset($config['services'])){
-			foreach($config['services'] as $name => $config){
-				if(!is_array($config)){
+		if (isset($config['services'])) {
+			foreach ($config['services'] as $name => $config) {
+				if (!is_array($config)) {
 					$container->addService($name, $config); // is directly service object from merged container
 					continue;
 				}
 				$class = $config['class'];
 				$arguments = [];
-				if($config['class'] instanceof \Nette\Neon\Entity){
+				if ($config['class'] instanceof \Nette\Neon\Entity) {
 					$class = $config['class']->value;
 					$arguments = $config['class']->attributes;
 				}
 				$reflectionClass = new \ReflectionClass($class);
 				$service = $reflectionClass->newInstanceArgs($arguments);
-				if(isset($config['setup'])){
-					foreach($config['setup'] as $neonEntity){
-						if(!method_exists($service, $neonEntity->value)){
+				if (isset($config['setup'])) {
+					foreach ($config['setup'] as $neonEntity) {
+						if (!method_exists($service, $neonEntity->value)) {
 							throw new ContainerFactoryException("Class $class does not have method $neonEntity->value().");
 						}
 						call_user_func_array(array($service, $neonEntity->value), $neonEntity->attributes);
@@ -177,18 +177,18 @@ class ContainerFactory
 	{
 		$config = $this->resolveUnmergables($config);
 		foreach ($config as $key => $value) {
-			if($value instanceof \Nette\Neon\Entity){
+			if ($value instanceof \Nette\Neon\Entity) {
 				$value->value = $this->parseValue($value->value, $allConfig);
-				foreach($value->attributes as $k => $v){
-					if(is_array($v)){
+				foreach ($value->attributes as $k => $v) {
+					if (is_array($v)) {
 						$value->attributes[$k] = $this->parseValues($v, $allConfig, array_merge($keysPath, [$key]));
-					} else{
+					} else {
 						$value->attributes[$k] = $this->parseValue($v, $allConfig);
 					}
 				}
 			} elseif (is_array($value)) {
 				$value = $this->parseValues($value, $allConfig, array_merge($keysPath, [$key]));
-			} elseif(!is_object($value)) {
+			} elseif (!is_object($value)) {
 				$value = $this->parseValue($value, $allConfig);
 			}
 
@@ -215,14 +215,14 @@ class ContainerFactory
 		if (preg_match_all('#%([^%]+)%#', $value, $matches)) {
 			foreach ($matches[1] as $match) {
 				$parameter = $config['parameters'];
-				foreach(explode(".", $match) as $m){
+				foreach (explode(".", $match) as $m) {
 					if (!array_key_exists($m, $parameter)) {
 						throw new ContainerFactoryException("Cannot find variable '$match', part '$m'.");
 					}
 					$parameter = $parameter[$m];
 				}
-				if(is_array($parameter)){
-					if("%$match%" !== $value){ // if is variable value an array, must not be part of a string
+				if (is_array($parameter)) {
+					if ("%$match%" !== $value) { // if is variable value an array, must not be part of a string
 						throw new ContainerFactoryException("Array value cannot be part of a string.");
 					}
 					return $parameter;

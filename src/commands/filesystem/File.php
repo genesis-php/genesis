@@ -50,7 +50,7 @@ class File extends Command
 			return;
 		}
 		$result = @unlink($file);
-		if(!$result){
+		if (!$result) {
 			$this->error("Cannot delete file '$file'.");
 		}
 	}

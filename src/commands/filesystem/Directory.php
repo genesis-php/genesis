@@ -23,26 +23,9 @@ class Directory extends Command
 		if (!is_dir($directory)) {
 			$this->error("'$directory' is not an directory.");
 		}
-		foreach ($this->read($directory) as $file) {
-			if ($file->isLink()) {
-				$this->checkPath($file->getPathName(), $directory);
-				$result = @unlink($file->getPathname());
-				if (!$result) {
-					$this->error("Cannot delete symlink '$file'.");
-				}
-			} elseif ($file->isDir()) {
-				$this->checkPath($file->getPathName(), $directory);
-				$result = @rmdir($file->getPathName());
-				if (!$result) {
-					$this->error("Cannot delete file '$file'.");
-				}
-			} elseif ($file->isFile()) {
-				$this->checkPath($file->getPathName(), $directory);
-				$result = @unlink($file->getPathname());
-				if (!$result) {
-					$this->error("Cannot delete file '$file'.");
-				}
-			}
+		foreach ($this->read($directory) as $fileInfo) {
+			$this->checkPath($fileInfo->getPathName(), $directory);
+			$this->cleanFile($fileInfo);
 		}
 	}
 
@@ -56,6 +39,27 @@ class Directory extends Command
 		exec('chmod ' . escapeshellarg($chmod) . ' ' . escapeshellarg($dir)); // TODO: find workaround - native PHP chmod didnt work
 		if (!$result) {
 			$this->error("Cannot create dir '$dir'.");
+		}
+	}
+
+
+	private function cleanFile(\SplFileInfo $fileInfo)
+	{
+		if ($fileInfo->isLink()) {
+			$result = @unlink($fileInfo->getPathname());
+			if (!$result) {
+				$this->error("Cannot delete symlink '{$fileInfo->getPathname()}'.");
+			}
+		} elseif ($fileInfo->isDir()) {
+			$result = @rmdir($fileInfo->getPathname());
+			if (!$result) {
+				$this->error("Cannot delete file '{$fileInfo->getPathname()}'.");
+			}
+		} elseif ($fileInfo->isFile()) {
+			$result = @unlink($fileInfo->getPathname());
+			if (!$result) {
+				$this->error("Cannot delete file '{$fileInfo->getPathname()}'.");
+			}
 		}
 	}
 
