@@ -164,7 +164,7 @@ class CommandsTest extends BaseTest
 	public function testSelfInit()
 	{
 		$dir = __DIR__ . '/03/output';
-		$distDirectory = __DIR__ . '/../build-dist';
+		$distDirectory = __DIR__ . '/../src/build-dist';
 		$command = new Commands\Filesystem\Directory();
 		$command->clean($dir);
 
@@ -189,8 +189,8 @@ class CommandsTest extends BaseTest
 	 */
 	public function testSelfInitError()
 	{
-		$distDirectory = __DIR__ . '/../build-dist';
-		$workingDirectory = __DIR__ . '/../';
+		$distDirectory = __DIR__ . '/../src/build-dist';
+		$workingDirectory = __DIR__ . '/../src';
 		$selfInit = new Commands\SelfInit();
 		$selfInit->setDistDirectory($distDirectory);
 		$selfInit->setWorkingDirectory($workingDirectory);
