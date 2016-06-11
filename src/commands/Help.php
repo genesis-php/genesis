@@ -51,7 +51,7 @@ class Help extends Command
 	 */
 	public function setSectionTasks($section, array $tasks)
 	{
-		if(!isset($this->sections[$section])){
+		if (!isset($this->sections[$section])) {
 			throw new InvalidArgumentException("Section '$section' not found.");
 		}
 		$this->sections[$section]['tasks'] = $tasks;

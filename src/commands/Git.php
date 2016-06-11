@@ -127,12 +127,12 @@ class Git extends Command
 	public function execute()
 	{
 		$command = '';
-		if($this->workingDirectory !== NULL){
+		if ($this->workingDirectory !== NULL) {
 			$command .= 'cd ' . escapeshellarg($this->workingDirectory) . ' && ';
 		}
 		$command .= escapeshellarg($this->gitExecutable);
 		$execCommand = $command . ' ' . $this->command;
-		if($this->redirectStderrToStdout){
+		if ($this->redirectStderrToStdout) {
 			$execCommand .= ' 2>&1';
 		}
 		return $this->exec($execCommand);

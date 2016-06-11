@@ -41,7 +41,7 @@ class BuildFactory
 	protected function autowire(IBuild $build, Container $container)
 	{
 		foreach ($this->getAutowiredProperties($build) as $property => $service) {
-			if(!$container->hasService($service)){
+			if (!$container->hasService($service)) {
 				throw new Exception("Cannot found service '$service' to inject into " . get_class($build) . "::$property.");
 			}
 			$build->$property = $container->getService($service);

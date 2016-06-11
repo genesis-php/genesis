@@ -132,7 +132,7 @@ class Bootstrap
 		$container = require_once $bootstrapFile;
 		if ($container === 1 || $container === TRUE) { // 1 = success, TRUE = already required
 			return NULL;
-		}elseif ($container instanceof Container) {
+		} elseif ($container instanceof Container) {
 			return $container;
 		}
 		$this->log("Returned value from bootstrap.php must be instance of 'Genesis\\Container\\Container' or nothing (NULL).", 'red');
@@ -164,7 +164,7 @@ class Bootstrap
 	 */
 	private function createBuild(Container $container, array $arguments = NULL)
 	{
-		if ($this->buildFactory === NULL){
+		if ($this->buildFactory === NULL) {
 			throw new InvalidStateException("Build factory was not setted.");
 		}
 		return $this->buildFactory->create($container, $arguments);

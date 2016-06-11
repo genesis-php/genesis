@@ -130,17 +130,17 @@ class Filesystem extends Command
 				$this->log("Directory '$directory' cleaned.");
 			}
 		}
-		if(count($this->filesToCopy) > 0) {
+		if (count($this->filesToCopy) > 0) {
 			$this->log(Cli::getColoredString('Copying files', 'light_blue'));
 			$command = new File();
 			foreach ($this->filesToCopy as $destination => $options) {
-				if(is_file($destination)){
-					if($options['onDuplicate'] == self::ERROR){
+				if (is_file($destination)) {
+					if ($options['onDuplicate'] == self::ERROR) {
 						$this->error("File '$destination' already exists.");
-					}elseif($options['onDuplicate'] == self::SKIP){
+					}elseif ($options['onDuplicate'] == self::SKIP) {
 						$this->log("File '$destination' already exists, skipping ...");
 						continue;
-					}elseif($options['onDuplicate'] == self::REWRITE){
+					}elseif ($options['onDuplicate'] == self::REWRITE) {
 						$command->delete($destination);
 					}
 				}
