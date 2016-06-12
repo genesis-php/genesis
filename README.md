@@ -40,7 +40,7 @@ An 'build' directory will be created, with these files:
 		- every public method starting with 'run' is an "Task"
 		- in task you can run any code you want
 		- there is public method 'setup', it runs slightly after Build class is constructed
-	- [for example](https://github.com/genesis-php/genesis/blob/master/build-dist/Build.php)
+	- [for example](https://github.com/genesis-php/genesis/blob/master/src/build-dist/Build.php)
 - <b>config.neon</b>
 	- config in [NEON](http://ne-on.org) format (very similar to YAML)
 	- define parameters and services
@@ -49,10 +49,10 @@ An 'build' directory will be created, with these files:
 		<code>  - include.neon</code>
 	- if you don't want to merge any config variable, add ! (exclamation mark), eg:<br>
 	<code>myParam!: unoverrided value</code>
-	- [for example](https://github.com/genesis-php/genesis/blob/master/build-dist/config.neon)
+	- [for example](https://github.com/genesis-php/genesis/blob/master/src/build-dist/config.neon)
 - <b>bootstrap.php</b> (optional)
 	- to load Build class and other classes
-	- [for example](https://github.com/genesis-php/genesis/blob/master/build-dist/bootstrap.php)
+	- [for example](https://github.com/genesis-php/genesis/blob/master/src/build-dist/bootstrap.php)
 - <b>build</b> (optional)
 	- shell script which is only shortcut into vendor directory with genesis
 
@@ -97,49 +97,49 @@ Commands are intended to use them in Tasks.
 In namespace Genesis\Commands are default commands and of course you can create and use your own commands.
 
 <h3>Common</h3>
-- [Exec](https://github.com/genesis-php/genesis/blob/master/commands/Exec.php)
+- [Exec](https://github.com/genesis-php/genesis/blob/master/src/commands/Exec.php)
 	- executes shell command
-	- returns an [ExecResult](https://github.com/genesis-php/genesis/blob/master/commands/ExecResult.php) including return code and output
-- [Git](https://github.com/genesis-php/genesis/blob/master/commands/Git.php)
+	- returns an [ExecResult](https://github.com/genesis-php/genesis/blob/master/src/commands/ExecResult.php) including return code and output
+- [Git](https://github.com/genesis-php/genesis/blob/master/src/commands/Git.php)
 	- executes Git command & can clone any repository
-	- returns an [ExecResult](https://github.com/genesis-php/genesis/blob/master/commands/ExecResult.php) including return code and output
-- [Help](https://github.com/genesis-php/genesis/blob/master/commands/Help.php)
+	- returns an [ExecResult](https://github.com/genesis-php/genesis/blob/master/src/commands/ExecResult.php) including return code and output
+- [Help](https://github.com/genesis-php/genesis/blob/master/src/commands/Help.php)
 	- prints list of available tasks to output
 	- list is given in simple array
-- [NodeJs](https://github.com/genesis-php/genesis/blob/master/commands/NodeJs.php)
+- [NodeJs](https://github.com/genesis-php/genesis/blob/master/src/commands/NodeJs.php)
 	- can install packages (npm install) in any directory
-- [PhpUnit](https://github.com/genesis-php/genesis/blob/master/commands/PhpUnit.php)
+- [PhpUnit](https://github.com/genesis-php/genesis/blob/master/src/commands/PhpUnit.php)
 	- can run PHPUnit tests in any directory & provides some setup
 
 <h3>Assets</h3>
-- [Assets\Gulp](https://github.com/genesis-php/genesis/blob/master/commands/assets/Gulp.php)
+- [Assets\Gulp](https://github.com/genesis-php/genesis/blob/master/src/commands/assets/Gulp.php)
 	- Running gulp, usually to build frontend
 	- You can setup gulpfile location
-- [Assets\Less](https://github.com/genesis-php/genesis/blob/master/commands/assets/Less.php)
+- [Assets\Less](https://github.com/genesis-php/genesis/blob/master/src/commands/assets/Less.php)
 	- if you want only compile LESS files on build, you can use this command
 	- using NodeJs lessc tool
 
 <h3>Filesystem</h3>
-- [Filesystem\Filesystem](https://github.com/genesis-php/genesis/blob/master/commands/filesystem/Filesystem.php)
+- [Filesystem\Filesystem](https://github.com/genesis-php/genesis/blob/master/src/commands/filesystem/Filesystem.php)
 	- configurable object, intended to use as service
-- [Filesystem\Directory](https://github.com/genesis-php/genesis/blob/master/commands/filesystem/Directory.php)
+- [Filesystem\Directory](https://github.com/genesis-php/genesis/blob/master/src/commands/filesystem/Directory.php)
 	- provides set of methods for manipulating with directories
 	- creating, cleaning (purging), reading
-- [Filesystem\File](https://github.com/genesis-php/genesis/blob/master/commands/filesystem/File.php)
+- [Filesystem\File](https://github.com/genesis-php/genesis/blob/master/src/commands/filesystem/File.php)
 	- provides set of methods for manipulating with files
 	- creating, copying
-- [Filesystem\Symlink](https://github.com/genesis-php/genesis/blob/master/commands/filesystem/Symlink.php)
+- [Filesystem\Symlink](https://github.com/genesis-php/genesis/blob/master/src/commands/filesystem/Symlink.php)
 	- creating symlinks
 
 <h3>Test</h3>
 This set of commands may be useful, if you want to check system some system requirements,
 usually at the beginning of the build.
-- [Test\NodeJs](https://github.com/genesis-php/genesis/blob/master/commands/test/NodeJs.php)
+- [Test\NodeJs](https://github.com/genesis-php/genesis/blob/master/src/commands/test/NodeJs.php)
 	- tests NodeJs version
-- [Test\Php](https://github.com/genesis-php/genesis/blob/master/commands/test/Php.php)
+- [Test\Php](https://github.com/genesis-php/genesis/blob/master/src/commands/test/Php.php)
 	- tests PHP ini settings
 	- tests if desired extension present
-- [Test\NodeJs](https://github.com/genesis-php/genesis/blob/master/commands/test/Programs.php)
+- [Test\NodeJs](https://github.com/genesis-php/genesis/blob/master/src/commands/test/Programs.php)
 	- tests if desired programs is installed (on UNIX)
 
 
