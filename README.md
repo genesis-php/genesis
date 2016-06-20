@@ -19,6 +19,11 @@ composer require genesis-php/genesis
 </code>
 
 
+Compatibility
+------------
+Please note that this software works on UNIX-like operating systems only at the moment.
+
+
 Quick example
 ---------------
 Look at the [example](https://github.com/genesis-php/example) which gives you quick introduction.<br>
