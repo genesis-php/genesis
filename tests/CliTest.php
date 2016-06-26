@@ -49,7 +49,7 @@ class CliTest extends BaseTest
 		$result = $this->execute('');
 		$this->assertEquals(0, $result['code']);
 		$line = $result['output'][6];
-		$this->assertContains('Running default', $line);
+		$this->assertContains('Running [default]', $line);
 	}
 
 
@@ -57,6 +57,7 @@ class CliTest extends BaseTest
 	{
 		$opts = [
 			'--working-dir' => '01',
+			'--colors' => '0',
 		];
 		if (isset($options['working-dir'])) {
 			$opts['--working-dir'] = $options['working-dir'];

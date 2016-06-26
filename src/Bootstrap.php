@@ -47,16 +47,8 @@ class Bootstrap
 	public function run(InputArgs $inputArgs)
 	{
 		$this->startup($inputArgs);
+		$this->selfInit($inputArgs);
 		$arguments = $inputArgs->getArguments();
-		if (isset($arguments[0]) && $arguments[0] === 'self-init') {
-			$directoryName = isset($arguments[1]) ? $arguments[1] : 'build';
-			$selfInit = new Commands\SelfInit();
-			$selfInit->setDistDirectory(__DIR__ . '/build-dist');
-			$selfInit->setWorkingDirectory($this->workingDir);
-			$selfInit->setDirname($directoryName);
-			$selfInit->execute();
-			$this->terminate(0);
-		}
 		$container = $this->resolveBootstrap();
 		$configFile = $inputArgs->getOption('config') ? $inputArgs->getOption('config') : self::DEFAULT_CONFIG_FILE;
 		try {
@@ -68,19 +60,14 @@ class Bootstrap
 			$this->handleException($e);
 		}
 		if (count($arguments) < 1) {
-			$this->log("Running default", 'green');
-			$build->runDefault();
+			$this->invokeTask($build, 'default', $arguments);
 			$this->terminate(0);
 		}
 
-		$method = 'run' . str_replace('-', '', ucfirst($arguments[0]));
-		if (!method_exists($build, $method)) {
-			$this->log("Task '$arguments[0]' does not exists.", 'red');
-			$this->terminate(255);
-		}
-		$this->log("Running [$arguments[0]]", 'green');
 		try {
-			$build->$method();
+			$this->invokeTask($build, $arguments[0], $arguments);
+		} catch (TerminateException $e) {
+			throw $e; // rethrow -> shutdown imminent
 		} catch (\Throwable $e) { // fault barrier -> catch all
 			$this->handleException($e);
 		} catch (\Exception $e) { // fault barrier -> catch all, PHP 5.x compatibility
@@ -114,6 +101,21 @@ class Bootstrap
 		if ($this->workingDir === __DIR__) {
 			$this->log(sprintf("Working dir '%s' is directory with Genesis. You have to choose directory with build.", $this->workingDir), 'red');
 			$this->terminate(255);
+		}
+	}
+
+
+	private function selfInit(InputArgs $inputArgs)
+	{
+		$arguments = $inputArgs->getArguments();
+		if (isset($arguments[0]) && $arguments[0] === 'self-init') {
+			$directoryName = isset($arguments[1]) ? $arguments[1] : 'build';
+			$selfInit = new Commands\SelfInit();
+			$selfInit->setDistDirectory(__DIR__ . '/build-dist');
+			$selfInit->setWorkingDirectory($this->workingDir);
+			$selfInit->setDirname($directoryName);
+			$selfInit->execute();
+			$this->terminate(0);
 		}
 	}
 
@@ -164,12 +166,29 @@ class Bootstrap
 	 * @param Container $container
 	 * @return Build
 	 */
-	private function createBuild(Container $container, array $arguments = NULL)
+	private function createBuild(Container $container, array $arguments)
 	{
 		if ($this->buildFactory === NULL) {
 			throw new InvalidStateException("Build factory was not setted.");
 		}
 		return $this->buildFactory->create($container, $arguments);
+	}
+
+	/**
+	 * @param Build $build
+	 * @param $task
+	 * @param array|NULL $arguments
+	 */
+	private function invokeTask(Build $build, $task, array $arguments)
+	{
+		$method = 'run' . str_replace('-', '', ucfirst($task));
+		if (!method_exists($build, $method)) {
+			$this->log("Task '$task' does not exists.", 'red');
+			$this->terminate(255);
+		}
+		$this->log("Running [$task]", 'green');
+		$args = array_slice($arguments, 1); // first argument is task name, slice it
+		call_user_func_array([$build, $method], $args);
 	}
 
 

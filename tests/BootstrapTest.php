@@ -104,7 +104,7 @@ class BootstrapTest extends BaseTest
 			$this->assertEquals(0, $e->getCode());
 		}
 		$lines = explode("\n", ob_get_clean());
-		$this->assertEquals('Running default', $lines[1]);
+		$this->assertEquals('Running [default]', $lines[1]);
 	}
 
 

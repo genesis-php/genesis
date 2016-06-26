@@ -58,9 +58,8 @@ class TestBuild extends Genesis\Build
 	/**
 	 * Description only
 	 */
-	public function runShowContainerValue()
+	public function runShowContainerValue($key) // this first parameter will be propagated from CLI
 	{
-		$key = $this->arguments[1];
 		$this->log(json_encode($this->container->getParameter($key)));
 	}
 
