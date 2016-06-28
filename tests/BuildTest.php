@@ -18,6 +18,14 @@ require_once __DIR__ . '/01/TestBuild.php';
 class BuildTest extends BaseTest
 {
 
+	public function testGetSet()
+	{
+		$container = new Container();
+		$build = new TestBuild($container, ['myArgument', 'myArgument2']);
+		$this->assertSame($container, $build->getContainer());
+		$this->assertSame(['myArgument', 'myArgument2'], $build->getArguments());
+	}
+
 	public function testDefault()
 	{
 		// may not throw exception

@@ -13,9 +13,11 @@ use Genesis\Config;
 class Build implements IBuild
 {
 
-	protected $container;
+	/** @var Config\Container */
+	private $container;
 
-	protected $arguments;
+	/** @var array|NULL */
+	private $arguments;
 
 
 	public function __construct(Config\Container $container, array $arguments = NULL)
@@ -24,6 +26,38 @@ class Build implements IBuild
 		$this->arguments = $arguments;
 	}
 
+
+	/**
+	 * @return Config\Container
+	 */
+	public function getContainer()
+	{
+		return $this->container;
+	}
+
+
+	/**
+	 * @return array|NULL
+	 */
+	public function getArguments()
+	{
+		return $this->arguments;
+	}
+
+	/**
+	 * Back compatibility.
+	 * @TODO: remove in version 3.x
+	 * @codeCoverageIgnoreStart
+	 */
+	public function &__get($name)
+	{
+		if(in_array($name, ['container', 'arguments'])){
+			$method = 'get' . ucfirst($name);
+			trigger_error(E_USER_WARNING, "Property '$name' is deprecated, use method $method() instead.");
+			return $this->$method();
+		}
+		trigger_error(E_USER_WARNING, "Property '$name' is not defined.");
+	}//@codeCoverageIgnoreEnd
 
 	public function setup()
 	{

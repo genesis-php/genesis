@@ -51,7 +51,7 @@ class TestBuild extends Genesis\Build
 	 */
 	public function runShowArguments()
 	{
-		$this->log(json_encode($this->arguments));
+		$this->log(json_encode($this->getArguments()));
 	}
 
 
@@ -60,20 +60,20 @@ class TestBuild extends Genesis\Build
 	 */
 	public function runShowContainerValue($key) // this first parameter will be propagated from CLI
 	{
-		$this->log(json_encode($this->container->getParameter($key)));
+		$this->log(json_encode($this->getContainer()->getParameter($key)));
 	}
 
 
 	public function runShowServiceClass()
 	{
-		$key = $this->arguments[1];
-		$this->log(get_class($this->container->getService($key)));
+		$key = $this->getArguments()[1];
+		$this->log(get_class($this->getContainer()->getService($key)));
 	}
 
 
 	public function runShowAutowiredClass()
 	{
-		$key = $this->arguments[1];
+		$key = $this->getArguments()[1];
 		$this->log(get_class($this->$key));
 	}
 
