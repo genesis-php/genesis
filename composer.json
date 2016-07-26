@@ -8,7 +8,8 @@
     "nette/neon": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "^4.8"
+    "phpunit/phpunit": "^4.8",
+    "nette/tester": "^1.7"
   },
   "minimum-stability": "stable",
   "bin": [

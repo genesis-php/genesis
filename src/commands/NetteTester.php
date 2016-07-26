@@ -4,10 +4,7 @@
 namespace Genesis\Commands;
 
 
-/**
- * @author Adam Bisek <adam.bisek@gmail.com>
- */
-class PhpUnit extends Command
+class NetteTester extends Command
 {
 
 	private $workingDir;
@@ -69,8 +66,10 @@ class PhpUnit extends Command
 	/**
 	 * Possible options:
 	 * - executable (mandatory)
-	 * - xdebugExtensionFile
-	 * - configFile
+	 * - iniFile
+	 * - interpreter
+	 * - threads
+	 * - mode
 	 * @param array|NULL $options
 	 */
 	public function setOptions(array $options = NULL)
@@ -82,29 +81,26 @@ class PhpUnit extends Command
 	public function execute()
 	{
 		if (!isset($this->options['executable'])) {
-			$this->error('PHPUnit executable not defined.');
+			$this->error('Tester executable is not defined.');
 		}
 
 		$cmd = 'php ';
-		if (isset($this->options['xdebugExtensionFile'])) {
-			if (!is_file($this->options['xdebugExtensionFile'])) { // PHP is quite when extension file does not exists
-				$this->error("Xdebug extension file '{$this->options['xdebugExtensionFile']}' does not exists.");
-			}
-			$cmd .= '-d zend_extension=' . escapeshellarg($this->options['xdebugExtensionFile']) . ' ';
-		}
 		$cmd .= escapeshellarg($this->options['executable']) . ' ';
+		$cmd .= '-s '; // show skipped tests
 		$cmd .= escapeshellarg($this->target) . ' ';
 
-		$options = [
-			'configFile' => '--configuration',
+		$optionalSwitches = [
+			'iniFile' => '-c',
+			'interpreter' => '-p',
+			'threads' => '-j',
+			'mode' => '-o',
 		];
-		foreach($options as $name => $switch) {
+		foreach($optionalSwitches as $name => $switch) {
 			if(isset($this->options[$name])) {
 				$cmd .= $switch . ' ';
 				$cmd .= escapeshellarg($this->options[$name]) . ' ';
 			}
 		}
-
 		$currdir = getcwd();
 		$result = @chdir($this->workingDir);
 		if (!$result) {
