@@ -157,7 +157,25 @@ class CommandsTest extends BaseTest
 		$command->setOptions($options);
 		$this->assertSame($options, $command->getOptions());
 		$command->execute();
-		$this->assertNotContains('Error', ob_get_clean());
+		$result = ob_get_clean();
+		$this->assertContains('OK', $result);
+	}
+
+	/**
+	 * @expectedException \Genesis\ErrorException
+	 * @expectedExceptionMessage PHPUnit executable not defined.
+	 */
+	public function testPhpUnitWithMissingMandatorySetting()
+	{
+		$workingDir = __DIR__ . '/03';
+		$command = new Commands\PhpUnit();
+		$command->setWorkingDir($workingDir);
+		$this->assertSame($workingDir, $command->getWorkingDir());
+		$command->setTarget($workingDir);
+		$options = [];
+		$command->setOptions($options);
+		$this->assertSame($options, $command->getOptions());
+		$command->execute();
 	}
 
 	public function testNetteTester()
@@ -170,31 +188,33 @@ class CommandsTest extends BaseTest
 		$command->setTarget($workingDir . '/NetteTester.php');
 		$options = [
 			'executable' => '../../vendor/bin/tester',
+			'mode' => 'junit',
 		];
 		$command->setOptions($options);
 		$this->assertSame($options, $command->getOptions());
 		$command->execute();
-		$this->assertContains('OK', ob_get_clean());
+		$this->assertContains(
+			'testsuite errors="0" skipped="0" tests="1"',
+			ob_get_clean()
+		);
 	}
 
-	public function testNetteTesterWithFallbackToOneThread()
+	/**
+	 * @expectedException \Genesis\ErrorException
+	 * @expectedExceptionMessage Tester executable is not defined.
+	 */
+	public function testNetteTesterWithMissingMandatorySetting()
 	{
 		$workingDir = __DIR__ . '/05';
-		ob_start();
 		$command = new Commands\NetteTester();
 		$command->setWorkingDir($workingDir);
 		$this->assertSame($workingDir, $command->getWorkingDir());
 		$command->setTarget($workingDir . '/NetteTester.php');
-		$options = [
-			'executable' => '../../vendor/bin/tester',
-			'threads' => 'fooBar'
-		];
+		$options = [];
 		$command->setOptions($options);
 		$this->assertSame($options, $command->getOptions());
 		$command->execute();
-		$output = ob_get_clean();
-		$this->assertContains('OK', $output);
-		$this->assertContains('1 thread', $output);
+		$this->assertContains('OK', ob_get_clean());
 	}
 
 	public function testSelfInit()

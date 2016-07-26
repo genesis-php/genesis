@@ -86,25 +86,21 @@ class NetteTester extends Command
 
 		$cmd = 'php ';
 		$cmd .= escapeshellarg($this->options['executable']) . ' ';
-		if (isset($this->options['iniFile'])) {
-			$cmd .= '-c ';
-			$cmd .= escapeshellarg($this->options['iniFile']) . ' ';
-		}
-		if (isset($this->options['interpreter'])) {
-			$cmd .= '-p ';
-			$cmd .= escapeshellarg($this->options['interpreter']) . ' ';
-		}
-		if (isset($this->options['threads'])) {
-			$cmd .= '-j ';
-			$cmd .= escapeshellarg(max(1, (int) $this->options['threads'])) . ' ';
-		}
-		if (isset($this->options['mode'])) {
-			$cmd .= '-o ';
-			$cmd .= escapeshellarg($this->options['mode']) . ' ';
-		}
 		$cmd .= '-s '; // show skipped tests
 		$cmd .= escapeshellarg($this->target) . ' ';
 
+		$optionalSwitches = [
+			'iniFile' => '-c',
+			'interpreter' => '-p',
+			'threads' => '-j',
+			'mode' => '-o',
+		];
+		foreach($optionalSwitches as $name => $switch) {
+			if(isset($this->options[$name])) {
+				$cmd .= $switch . ' ';
+				$cmd .= escapeshellarg($this->options[$name]) . ' ';
+			}
+		}
 		$currdir = getcwd();
 		$result = @chdir($this->workingDir);
 		if (!$result) {

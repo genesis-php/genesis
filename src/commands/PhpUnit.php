@@ -92,13 +92,18 @@ class PhpUnit extends Command
 			}
 			$cmd .= '-d zend_extension=' . escapeshellarg($this->options['xdebugExtensionFile']) . ' ';
 		}
-
 		$cmd .= escapeshellarg($this->options['executable']) . ' ';
-		if (isset($this->options['configFile'])) {
-			$cmd .= '--configuration ';
-			$cmd .= escapeshellarg($this->options['configFile']) . ' ';
-		}
 		$cmd .= escapeshellarg($this->target) . ' ';
+
+		$optionalSwitches = [
+			'configFile' => '--configuration',
+		];
+		foreach($optionalSwitches as $name => $switch) {
+			if(isset($this->options[$name])) {
+				$cmd .= $switch . ' ';
+				$cmd .= escapeshellarg($this->options[$name]) . ' ';
+			}
+		}
 
 		$currdir = getcwd();
 		$result = @chdir($this->workingDir);
