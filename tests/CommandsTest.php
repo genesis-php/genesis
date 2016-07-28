@@ -160,6 +160,42 @@ class CommandsTest extends BaseTest
 		$this->assertNotContains('Error', ob_get_clean());
 	}
 
+	public function testNetteTester()
+	{
+		$workingDir = __DIR__ . '/05';
+		ob_start();
+		$command = new Commands\NetteTester();
+		$command->setWorkingDir($workingDir);
+		$this->assertSame($workingDir, $command->getWorkingDir());
+		$command->setTarget($workingDir . '/NetteTester.php');
+		$options = [
+			'executable' => '../../vendor/bin/tester',
+		];
+		$command->setOptions($options);
+		$this->assertSame($options, $command->getOptions());
+		$command->execute();
+		$this->assertContains('OK', ob_get_clean());
+	}
+
+	public function testNetteTesterWithFallbackToOneThread()
+	{
+		$workingDir = __DIR__ . '/05';
+		ob_start();
+		$command = new Commands\NetteTester();
+		$command->setWorkingDir($workingDir);
+		$this->assertSame($workingDir, $command->getWorkingDir());
+		$command->setTarget($workingDir . '/NetteTester.php');
+		$options = [
+			'executable' => '../../vendor/bin/tester',
+			'threads' => 'fooBar'
+		];
+		$command->setOptions($options);
+		$this->assertSame($options, $command->getOptions());
+		$command->execute();
+		$output = ob_get_clean();
+		$this->assertContains('OK', $output);
+		$this->assertContains('1 thread', $output);
+	}
 
 	public function testSelfInit()
 	{
