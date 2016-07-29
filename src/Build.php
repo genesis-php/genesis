@@ -53,7 +53,7 @@ class Build implements IBuild
 	{
 		if(in_array($name, ['container', 'arguments'])){
 			$method = 'get' . ucfirst($name);
-			trigger_error(E_USER_WARNING, "Property '$name' is deprecated, use method $method() instead.");
+			trigger_error("Property '$name' is deprecated, use method $method() instead.", E_USER_WARNING);
 			return $this->$method();
 		}
 		trigger_error(E_USER_WARNING, "Property '$name' is not defined.");
