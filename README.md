@@ -115,6 +115,8 @@ In namespace Genesis\Commands are default commands and of course you can create 
 	- can install packages (npm install) in any directory
 - [PhpUnit](https://github.com/genesis-php/genesis/blob/master/src/commands/PhpUnit.php)
 	- can run PHPUnit tests in any directory & provides some setup
+- [NetteTester](https://github.com/genesis-php/genesis/blob/master/src/commands/NetteTester.php)
+	- can run Nette Tester tests in any directory & provides some setup
 
 <h3>Assets</h3>
 - [Assets\Gulp](https://github.com/genesis-php/genesis/blob/master/src/commands/assets/Gulp.php)
