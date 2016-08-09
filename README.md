@@ -61,7 +61,7 @@ An 'build' directory will be created, with these files:
 - <b>build</b> (optional)
 	- shell script which is only shortcut into vendor directory with genesis
 
-[Look at the skeleton, how can build directory looks like.](https://github.com/genesis-php/genesis/tree/master/build-dist)
+[Look at the skeleton, how can build directory looks like.](https://github.com/genesis-php/genesis/tree/master/src/build-dist)
 
 
 
