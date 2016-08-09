@@ -1,6 +1,7 @@
 [Genesis](https://github.com/genesis-php/genesis)
 ===================================
 [![Build Status](https://travis-ci.org/genesis-php/genesis.svg?branch=master)](https://travis-ci.org/genesis-php/genesis)
+[![Build status](https://ci.appveyor.com/api/projects/status/b3a34foo3fc35pbh?svg=true)](https://ci.appveyor.com/project/adambisek/genesis)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/genesis-php/genesis/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/genesis-php/genesis/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/genesis-php/genesis/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/genesis-php/genesis/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/genesis-php/genesis/v/stable)](https://packagist.org/packages/genesis-php/genesis)
@@ -21,7 +22,8 @@ composer require genesis-php/genesis
 
 Compatibility
 ------------
-Please note that this software works on UNIX-like operating systems only at the moment.
+This software is developed primarily for UNIX systems (Linux, OSX), 
+but it works also on Windows.
 
 
 Quick example

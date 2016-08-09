@@ -85,7 +85,7 @@ class PhpUnit extends Command
 			$this->error('PHPUnit executable not defined.');
 		}
 
-		$cmd = 'php ';
+		$cmd = '';
 		if (isset($this->options['xdebugExtensionFile'])) {
 			if (!is_file($this->options['xdebugExtensionFile'])) { // PHP is quite when extension file does not exists
 				$this->error("Xdebug extension file '{$this->options['xdebugExtensionFile']}' does not exists.");

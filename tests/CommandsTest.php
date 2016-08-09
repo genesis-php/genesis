@@ -35,7 +35,7 @@ class CommandsTest extends BaseTest
 		$result = $exec->execute();
 		$output = $result->getOutput();
 		$line = $output[0];
-		$this->assertEquals('testexec', $line);
+		$this->assertEquals('testexec', trim($line, '"')); // on windows there are quotes
 		ob_end_clean();
 	}
 
@@ -95,6 +95,10 @@ class CommandsTest extends BaseTest
 		$this->assertFileExists($dir); // assert directory exists
 
 		// cleanup
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			// on AppVeyor experiencing permissions issues
+			return;
+		}
 		$directory = new Commands\Filesystem\Directory();
 		$directory->clean($dir);
 		rmdir($dir);
@@ -188,13 +192,13 @@ class CommandsTest extends BaseTest
 		$command->setTarget($workingDir . '/NetteTester.php');
 		$options = [
 			'executable' => '../../vendor/bin/tester',
-			'mode' => 'junit',
+			'mode' => 'console',
 		];
 		$command->setOptions($options);
 		$this->assertSame($options, $command->getOptions());
 		$command->execute();
 		$this->assertContains(
-			'testsuite errors="0" skipped="0" tests="1"',
+			'OK (1 test',
 			ob_get_clean()
 		);
 	}
@@ -241,7 +245,7 @@ class CommandsTest extends BaseTest
 
 	/**
 	 * @expectedException \Genesis\ErrorException
-	 * @expectedExceptionMessageRegExp /Directory 'build-dist' in working directory '[A-Za-z0-9\/\._-]+' already exists\./
+	 * @expectedExceptionMessageRegExp /Directory 'build-dist' in working directory '.+' already exists\./
 	 */
 	public function testSelfInitError()
 	{
@@ -255,91 +259,7 @@ class CommandsTest extends BaseTest
 	}
 
 
-	/** Filesystem */
-
-	public function testFs()
-	{
-		$dir = __DIR__ . '/03/output';
-		$command = new Commands\Filesystem\Directory();
-		$command->clean($dir);
-		$res = glob($dir . "/*");
-		$this->assertCount(0, $res);
-
-		$command = new Commands\Filesystem\Directory();
-		$command->create($dir . '/test-dir', 777);
-		$this->assertFileExists($dir . '/test-dir');
-
-		$iterator = $command->read($dir);
-		$this->assertCount(1, $iterator);
-		$this->assertEquals('test-dir', $iterator->current()->getFileName());
-
-		$command = new Commands\Filesystem\File();
-		$command->create($dir . '/testfile.json', '{}');
-		$this->assertFileExists($dir . '/testfile.json');
-		$this->assertEquals('{}', file_get_contents($dir . '/testfile.json'));
-
-		$command = new Commands\Filesystem\File();
-		$command->copy($dir . '/testfile.json', $dir . '/testfile2.json');
-		$this->assertFileExists($dir . '/testfile.json'); // old file still exists
-		$this->assertFileExists($dir . '/testfile2.json');
-		$this->assertEquals('{}', file_get_contents($dir . '/testfile2.json'));
-
-		$command = new Commands\Filesystem\Symlink();
-		$command->create($dir . '/testfile.json', $dir . '/sym-testfile.json');
-		$this->assertFileExists($dir . '/sym-testfile.json');
-		$this->assertTrue(is_link($dir . '/sym-testfile.json'));
-
-		ob_start();
-		$command->createRelative($dir, 'testfile.json', 'sym-rel-testfile.json');
-		ob_end_clean();
-		$this->assertFileExists($dir . '/sym-rel-testfile.json');
-		$this->assertTrue(is_link($dir . '/sym-rel-testfile.json'));
-
-		$command = new Commands\Filesystem\File();
-		$command->delete($dir . '/testfile.json');
-		$this->assertFileNotExists($dir . '/testfile.json');
-
-		$command = new Commands\Filesystem\Directory();
-		$command->clean($dir);
-		$res = glob($dir . "/*");
-		$this->assertCount(0, $res);
-
-		// filesystem class
-		$command = new Commands\Filesystem\Filesystem();
-		$command->addDirectoriesToCreate([
-			$dir . '/testfs1' => 777,
-		]);
-		$command->addDirectoriesToCreate([
-			$dir . '/testfs2' => 777,
-		]);
-		$command->addFilesToCopy([
-			$dir . '/testfs2/test.js' => $dir . '/../gulpfile.js',
-		]);
-		$command->addSymlinksRelativeToCreate([
-			'symlink' => '../'
-		], $dir);
-		ob_start();
-		$command->execute();
-		ob_end_clean();
-		$res = glob($dir . "/*");
-		$this->assertCount(3, $res);
-		$this->assertTrue(is_dir($dir . '/testfs1'));
-		$this->assertTrue(is_dir($dir . '/testfs2'));
-		$this->assertFileExists($dir . '/testfs2/test.js');
-		$this->assertTrue(is_link($dir . '/symlink'));
-		$command = new Commands\Filesystem\Filesystem();
-		$command->addDirectoriesToClean([
-			$dir,
-		]);
-		ob_start();
-		$command->execute();
-		ob_end_clean();
-		$res = glob($dir . "/*");
-		$this->assertCount(0, $res);
-	}
-
-
-	/** Filesystem */
+	/** Assets */
 
 	public function testAssets()
 	{
@@ -395,12 +315,121 @@ class CommandsTest extends BaseTest
 	}
 
 
+	/** Filesystem */
+
+	public function testFs()
+	{
+		$dir = __DIR__ . '/03/output';
+		$command = new Commands\Filesystem\Directory();
+		$command->clean($dir);
+		$res = glob($dir . "/*");
+		$this->assertCount(0, $res);
+
+		$command = new Commands\Filesystem\Directory();
+		$command->create($dir . '/test-dir', 777);
+		$this->assertFileExists($dir . '/test-dir');
+
+		$iterator = $command->read($dir);
+		$this->assertCount(1, $iterator);
+		$this->assertEquals('test-dir', $iterator->current()->getFileName());
+
+		$command = new Commands\Filesystem\File();
+		$command->create($dir . '/testfile.json', '{}');
+		$this->assertFileExists($dir . '/testfile.json');
+		$this->assertEquals('{}', file_get_contents($dir . '/testfile.json'));
+
+		$command = new Commands\Filesystem\File();
+		$command->copy($dir . '/testfile.json', $dir . '/testfile2.json');
+		$this->assertFileExists($dir . '/testfile.json'); // old file still exists
+		$this->assertFileExists($dir . '/testfile2.json');
+		$this->assertEquals('{}', file_get_contents($dir . '/testfile2.json'));
+
+		$command = new Commands\Filesystem\Symlink();
+		$command->create($dir . '/testfile.json', $dir . '/sym-testfile.json');
+		$this->assertFileExists($dir . '/sym-testfile.json');
+		$this->assertTrue(is_link($dir . '/sym-testfile.json'));
+
+		$command = new Commands\Filesystem\File();
+		$command->delete($dir . '/testfile.json');
+		$this->assertFileNotExists($dir . '/testfile.json');
+
+		$command = new Commands\Filesystem\Directory();
+		$command->clean($dir);
+		$res = glob($dir . "/*");
+		$this->assertCount(0, $res);
+
+		// filesystem class
+		$command = new Commands\Filesystem\Filesystem();
+		$command->addDirectoriesToCreate([
+			$dir . '/testfs1' => 777,
+		]);
+		$command->addDirectoriesToCreate([
+			$dir . '/testfs2' => 777,
+		]);
+		$command->addFilesToCopy([
+			$dir . '/testfs2/test.js' => $dir . '/../gulpfile.js',
+		]);
+		ob_start();
+		$command->execute();
+		ob_end_clean();
+		$res = glob($dir . "/*");
+		$this->assertCount(2, $res);
+		$this->assertTrue(is_dir($dir . '/testfs1'));
+		$this->assertTrue(is_dir($dir . '/testfs2'));
+		$this->assertFileExists($dir . '/testfs2/test.js');
+		$command = new Commands\Filesystem\Filesystem();
+		$command->addDirectoriesToClean([
+			$dir,
+		]);
+		ob_start();
+		$command->execute();
+		ob_end_clean();
+		$res = glob($dir . "/*");
+		$this->assertCount(0, $res);
+	}
+
+	public function testFsRelativeSymlinks()
+	{
+		$dir = __DIR__ . '/03/output';
+
+		ob_start();
+		$command = new Commands\Filesystem\Symlink();
+		$command->createRelative($dir, 'testfile.json', 'sym-rel-testfile.json');
+		ob_end_clean();
+		$this->assertTrue(is_link($dir . '/sym-rel-testfile.json'));
+
+		$command = new Commands\Filesystem\Filesystem();
+		$command->addSymlinksRelativeToCreate([
+			'symlink' => '../'
+		], $dir);
+		ob_start();
+		$command->execute();
+		ob_end_clean();
+		$this->assertTrue(is_link($dir . '/symlink'));
+
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') { // AppVeyor cannot delete symlinks created by exec()
+			return;
+		}
+		$command = new Commands\Filesystem\Filesystem();
+		$command->addDirectoriesToClean([
+			$dir,
+		]);
+		ob_start();
+		$command->execute();
+		ob_end_clean();
+		$res = glob($dir . "/*");
+		$this->assertCount(0, $res);
+	}
+
+
 	/** Tests */
 
 	/**
 	 * @expectedException \Genesis\ErrorException
 	 * @expectedExceptionMessage Required program "phppp" is not installed
 	 * @expectedExceptionCode NULL
+	 * @requires OS Linux|Darwin
+	 * Do not test on Windows
 	 */
 	public function testTestProgramsFail()
 	{
@@ -411,7 +440,10 @@ class CommandsTest extends BaseTest
 		$command->execute();
 	}
 
-
+	/**
+	 * @requires OS Linux|Darwin
+	 * Do not test on Windows
+	 */
 	public function testTestPrograms()
 	{
 		ob_start();
