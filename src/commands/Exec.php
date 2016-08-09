@@ -40,10 +40,10 @@ class Exec extends Command
 	 */
 	public function execute()
 	{
-		echo Cli::getColoredString("$this->command\n", 'light_blue');
+		echo Cli::getColoredString($this->command . PHP_EOL, 'light_blue');
 		exec($this->command, $output, $return);
 		$result = new ExecResult($return, $output);
-		echo Cli::getColoredString(implode("\n", $output), 'dark_gray') . "\n\n";
+		echo Cli::getColoredString(implode(PHP_EOL, $output), 'dark_gray') . "\n\n";
 		return $result;
 	}
 

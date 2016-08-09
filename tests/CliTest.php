@@ -20,6 +20,9 @@ class CliTest extends BaseTest
 	public function setUp()
 	{
 		$this->executable = __DIR__ . '/../genesis';
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			$this->executable = 'php ' . $this->executable;
+		}
 	}
 
 

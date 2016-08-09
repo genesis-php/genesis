@@ -36,7 +36,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals("Task 'nonExistingTask' does not exists.", $lines[1]);
 	}
 
@@ -50,7 +50,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals("Returned value from bootstrap.php must be instance of 'Genesis\\Container\\Container' or nothing (NULL).", $lines[1]);
 	}
 
@@ -64,7 +64,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals('"val"', $lines[2]);
 
 		$inputArgs = $this->createInputArgs(['showServiceClass', 'myService'], ['working-dir' => '01']);
@@ -74,7 +74,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals('ArrayObject', $lines[2]);
 	}
 
@@ -88,7 +88,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals('Running [info]', $lines[1]);
 	}
 
@@ -103,7 +103,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals('Running [default]', $lines[1]);
 	}
 
@@ -117,7 +117,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals('Exited with ERROR:', $lines[2]);
 		$this->assertEquals('UnexpectedException message', $lines[3]);
 	}
@@ -136,7 +136,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertContains('Build initialized in', $lines[0]);
 		$this->assertContains('You can start by typing', $lines[1]);
 
@@ -154,7 +154,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals("Working dir 'workingDirNonExisting' does not exists.", $lines[0]);
 
 		$inputArgs = $this->createInputArgs([], ['working-dir' => '../src']);
@@ -164,7 +164,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertRegexp("#Working dir '.+' is directory with Genesis#", $lines[0]);
 	}
 
@@ -178,7 +178,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals('Info: Found bootstrap.php in working directory.', $lines[0]);
 	}
 
@@ -192,7 +192,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals("Build class 'MyTest\\NonExistingClass' was not found.", $lines[1]);
 	}
 
@@ -206,7 +206,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals("Running [info]", $lines[1]);
 	}
 
@@ -220,7 +220,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals('"optionalConfigVal"', $lines[2]);
 	}
 
@@ -234,7 +234,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals('ArrayObject', $lines[2]);
 
 		$inputArgs = $this->createInputArgs(['showAutowiredClass', 'testService2'], ['working-dir' => '01', 'config' => 'config.neon']);
@@ -244,7 +244,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(0, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertEquals('stdClass', $lines[2]);
 	}
 
@@ -258,7 +258,7 @@ class BootstrapTest extends BaseTest
 		}catch(TerminateException $e){
 			$this->assertEquals(255, $e->getCode());
 		}
-		$lines = explode("\n", ob_get_clean());
+		$lines = explode(PHP_EOL, ob_get_clean());
 		$this->assertContains('Cannot found service \'myService\' to inject into', $lines[2]);
 	}
 

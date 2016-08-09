@@ -84,7 +84,7 @@ class NetteTester extends Command
 			$this->error('Tester executable is not defined.');
 		}
 
-		$cmd = 'php ';
+		$cmd = '';
 		$cmd .= escapeshellarg($this->options['executable']) . ' ';
 		$cmd .= '-s '; // show skipped tests
 		$cmd .= escapeshellarg($this->target) . ' ';

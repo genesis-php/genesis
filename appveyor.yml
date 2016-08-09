@@ -1,0 +1,39 @@
+build: off
+
+clone_folder: c:\projects\genesis
+
+platform:
+  - x86
+  - x64
+
+init:
+  - git config --global core.autocrlf true
+  - SET PATH=c:\php\56;%APPDATA%\npm;%PATH%
+
+install:
+  # Install PHP 5.6
+  - IF EXIST c:\php\56 (SET PHP=0) ELSE (SET PHP=1)
+  - IF %PHP%==1 mkdir c:\php\56
+  - IF %PHP%==1 cd c:\php\56
+  - IF %PHP%==1 appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-5.6.18-Win32-VC11-x86.zip
+  - IF %PHP%==1 7z x php-5.6.18-Win32-VC11-x86.zip >nul
+  - IF %PHP%==1 del /Q *.zip
+  - IF %PHP%==1 echo extension_dir=ext >> php.ini
+  - IF %PHP%==1 echo extension=php_openssl.dll >> php.ini
+
+  - cd c:\projects\genesis
+  - appveyor DownloadFile https://getcomposer.org/composer.phar
+  - php composer.phar install --prefer-dist --no-progress
+
+  - ps: Install-Product node 5
+  - npm install -g npm
+  - npm install -g gulp
+  - npm install -g less # does not work, need to be installed locally
+
+test_script:
+  - node --version && npm --version
+  - cd tests
+  - npm install less
+
+  - php --version
+  - ../vendor/bin/phpunit .

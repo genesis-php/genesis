@@ -30,7 +30,11 @@ class Symlink extends Command
 		if (!is_dir($directory)) {
 			$this->error("Directory '$directory' not found.");
 		}
-		$cmd = 'cd ' . escapeshellarg($directory) . ' && ln -s  ' . escapeshellarg($target) . ' ' . escapeshellarg($link);
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			$cmd = 'cd ' . escapeshellarg($directory) . ' && mklink ' . ' /D ' . escapeshellarg($link) . ' ' . escapeshellarg($target);
+		} else {
+			$cmd = 'cd ' . escapeshellarg($directory) . ' && ln -s ' . escapeshellarg($target) . ' ' . escapeshellarg($link);
+		}
 		$command = new Commands\Exec();
 		$command->setCommand($cmd);
 		$result = $command->execute();
