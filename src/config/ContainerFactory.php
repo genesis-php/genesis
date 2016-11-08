@@ -106,6 +106,9 @@ class ContainerFactory
 					$container->addService($name, $config); // is directly service object from merged container
 					continue;
 				}
+				if(!isset($config['class'])) {
+					throw new ContainerFactoryException("Service '$name' does not have defined class.");
+				}
 				$class = $config['class'];
 				$arguments = [];
 				if ($config['class'] instanceof \Nette\Neon\Entity) {
