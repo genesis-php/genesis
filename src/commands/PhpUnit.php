@@ -16,6 +16,8 @@ class PhpUnit extends Command
 
 	private $options;
 
+	private $phpInterpreter;
+
 
 	/**
 	 * Returns working directory. System will switch to this directory before running tests
@@ -46,6 +48,23 @@ class PhpUnit extends Command
 		return $this->target;
 	}
 
+	/**
+	 * Returns PHP interpreter.
+	 * @return string
+	 */
+	public function getPhpInterpreter()
+	{
+		return $this->phpInterpreter ?: 'php';
+	}
+
+	/**
+	 * Sets PHP interpreter in your system (e.g. php, php5.6, php7.0...).
+	 * @return string
+	 */
+	public function setPhpInterpreter($phpInterpreter)
+	{
+		$this->phpInterpreter = $phpInterpreter;
+	}
 
 	/**
 	 * Sets target to be executed. Dir in working directory, dot (current dir), TestFile, etc
@@ -90,7 +109,7 @@ class PhpUnit extends Command
 			if (!is_file($this->options['xdebugExtensionFile'])) { // PHP is quite when extension file does not exists
 				$this->error("Xdebug extension file '{$this->options['xdebugExtensionFile']}' does not exists.");
 			}
-			$cmd .= 'php -d zend_extension=' . escapeshellarg($this->options['xdebugExtensionFile']) . ' ';
+			$cmd .= $this->getPhpInterpreter() . ' -d zend_extension=' . escapeshellarg($this->options['xdebugExtensionFile']) . ' ';
 		}
 		$cmd .= escapeshellarg($this->options['executable']) . ' ';
 		$cmd .= escapeshellarg($this->target) . ' ';
